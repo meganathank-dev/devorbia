@@ -1,5 +1,7 @@
 import * as employeeRepository from '../repositories/employee-profile.repository.js';
 import * as userRepository from '../repositories/user.repository.js';
+import * as departmentRepository from '../repositories/department.repository.js';
+import * as teamRepository from '../repositories/team.repository.js';
 import { hashPassword, validatePasswordStrength } from '../utils/password.util.js';
 import { BadRequestError, ConflictError, NotFoundError } from '../errors/app.error.js';
 import { ACCOUNT_STATUS } from '../constants/account-status.js';
@@ -131,4 +133,77 @@ export const getEmployeeById = async (id, tenantId) => {
     throw new NotFoundError('Employee not found'); // Safe IDOR prevention
   }
   return employee;
+};
+
+/**
+ * Assign an employee to a department and/or team.
+ *
+ * Validates that the department and team belong to the same organization,
+ * and that the team belongs to the specified department.
+ *
+ * @param {string} employeeId - EmployeeProfile ObjectId
+ * @param {string} tenantId - Authenticated user's organizationId
+ * @param {object} params
+ * @param {string|null} [params.departmentId]
+ * @param {string|null} [params.teamId]
+ * @returns {Promise<object>}
+ */
+export const assignEmployee = async (employeeId, tenantId, { departmentId, teamId }) => {
+  // Verify employee exists and belongs to tenant
+  const employee = await employeeRepository.findByIdAndOrganization(employeeId, tenantId);
+  if (!employee) {
+    throw new NotFoundError('Employee not found');
+  }
+
+  const updateData = {};
+
+  // Validate department if provided
+  if (departmentId !== undefined) {
+    if (departmentId === null) {
+      updateData.departmentId = null;
+      // If clearing department, also clear team
+      updateData.teamId = null;
+    } else {
+      const department = await departmentRepository.findByIdAndOrganization(departmentId, tenantId);
+      if (!department) {
+        throw new NotFoundError('Department not found');
+      }
+      updateData.departmentId = departmentId;
+    }
+  }
+
+  // Validate team if provided
+  if (teamId !== undefined) {
+    if (teamId === null) {
+      updateData.teamId = null;
+    } else {
+      const team = await teamRepository.findByIdAndOrganization(teamId, tenantId);
+      if (!team) {
+        throw new NotFoundError('Team not found');
+      }
+
+      // Determine the effective departmentId for validation
+      const effectiveDeptId = updateData.departmentId !== undefined
+        ? updateData.departmentId
+        : employee.departmentId?.toString();
+
+      // Verify team belongs to the employee's department
+      if (team.departmentId.toString() !== effectiveDeptId?.toString()) {
+        throw new BadRequestError('Team does not belong to the specified department');
+      }
+
+      updateData.teamId = teamId;
+    }
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    throw new BadRequestError('No assignment data provided');
+  }
+
+  const updated = await employeeRepository.updateProfile(employeeId, tenantId, updateData);
+  if (!updated) {
+    throw new NotFoundError('Employee not found');
+  }
+
+  return updated;
 };

@@ -28,8 +28,8 @@ const sidebarGroups = [
     title: "WORKFORCE",
     items: [
       { path: '/employees', label: 'Employees', icon: Users },
-      { path: '#departments', label: 'Departments', icon: Network, disabled: true, tooltip: "Phase 2B" },
-      { path: '#teams', label: 'Teams', icon: Users2, disabled: true, tooltip: "Phase 2B" },
+      { path: '/departments', label: 'Departments', icon: Network },
+      { path: '/teams', label: 'Teams', icon: Users2 },
     ]
   },
   {

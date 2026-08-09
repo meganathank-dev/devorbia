@@ -1,12 +1,21 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useEmployeeStore } from '../../stores/employee.store.js';
+import { useAuthStore } from '../../stores/auth.store.js';
+import { ROLES } from '../../constants/roles.js';
 import { Card } from '../../components/ui/Card.jsx';
-import { ArrowLeft, Mail, Briefcase, Calendar, Hash } from 'lucide-react';
+import { Button } from '../../components/ui/Button.jsx';
+import { ArrowLeft, Mail, Briefcase, Calendar, Hash, UserCog } from 'lucide-react';
+import { AssignEmployeeModal } from '../../components/employees/AssignEmployeeModal.jsx';
+import { assignEmployee } from '../../services/employee.service.js';
 
 export const EmployeeDetailPage = () => {
   const { id } = useParams();
   const { selectedEmployee: emp, isLoading, error, fetchEmployeeById } = useEmployeeStore();
+  const { user } = useAuthStore();
+  const [showAssignModal, setShowAssignModal] = useState(false);
+
+  const canAssign = [ROLES.ORGANIZATION_ADMIN, ROLES.PROJECT_MANAGER].includes(user?.role);
 
   useEffect(() => {
     if (id) {
@@ -14,17 +23,30 @@ export const EmployeeDetailPage = () => {
     }
   }, [id, fetchEmployeeById]);
 
+  const handleAssign = async (payload) => {
+    await assignEmployee(id, payload);
+    fetchEmployeeById(id);
+  };
+
   if (isLoading) return <div className="text-center py-10">Loading profile...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
   if (!emp) return <div className="text-center py-10">Employee not found.</div>;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <Link to="/employees" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white mb-4">
-          <ArrowLeft size={16} /> Back to Directory
-        </Link>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Employee Profile</h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <Link to="/employees" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white mb-4">
+            <ArrowLeft size={16} /> Back to Directory
+          </Link>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Employee Profile</h1>
+        </div>
+        {canAssign && (
+          <Button variant="outline" className="flex items-center gap-2" onClick={() => setShowAssignModal(true)}>
+            <UserCog size={16} />
+            Assign Role
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -71,7 +93,16 @@ export const EmployeeDetailPage = () => {
               <Briefcase className="text-gray-400 mt-0.5 shrink-0" size={18} />
               <div>
                 <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Department</p>
-                <p className="text-sm text-gray-900 dark:text-white mt-1 italic text-gray-400">Not assigned</p>
+                {emp.departmentId ? (
+                  <p className="text-sm text-gray-900 dark:text-white mt-1">
+                    {emp.departmentId.name || 'Assigned'}
+                    {emp.teamId && (
+                      <span className="text-gray-500"> (Team: {emp.teamId.name || 'Assigned'})</span>
+                    )}
+                  </p>
+                ) : (
+                  <p className="text-sm text-gray-900 dark:text-white mt-1 italic text-gray-400">Not assigned</p>
+                )}
               </div>
             </div>
 
@@ -104,6 +135,14 @@ export const EmployeeDetailPage = () => {
           </div>
         </Card>
       </div>
+
+      <AssignEmployeeModal
+        isOpen={showAssignModal}
+        onClose={() => setShowAssignModal(false)}
+        employee={emp}
+        onAssign={handleAssign}
+      />
     </div>
   );
 };
+

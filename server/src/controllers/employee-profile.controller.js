@@ -57,3 +57,21 @@ export const getEmployeeById = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Assign an employee to a department and/or team.
+ * PATCH /api/v1/employees/:id/assign
+ */
+export const assignEmployee = async (req, res, next) => {
+  try {
+    const tenantId = req.tenantId;
+    const employee = await employeeService.assignEmployee(req.params.id, tenantId, req.body);
+
+    sendSuccess(res, {
+      data: employee,
+      message: 'Employee assignment updated successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};

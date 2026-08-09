@@ -1,5 +1,10 @@
 import { z } from 'zod';
+import mongoose from 'mongoose';
 import { ROLES } from '../constants/roles.js';
+
+const objectId = z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
+  message: 'Invalid ID format',
+});
 
 export const createEmployeeSchema = z.object({
   employeeId: z.string().trim().min(1, 'Employee ID is required').max(50, 'Employee ID must be 50 characters or less'),
@@ -16,4 +21,9 @@ export const getEmployeesQuerySchema = z.object({
   page: z.string().regex(/^\d+$/).transform(Number).optional(),
   limit: z.string().regex(/^\d+$/).transform(Number).optional(),
   search: z.string().trim().max(100).optional(),
+});
+
+export const assignEmployeeSchema = z.object({
+  departmentId: objectId.nullable().optional(),
+  teamId: objectId.nullable().optional(),
 });

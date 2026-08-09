@@ -15,8 +15,13 @@ import ResetPasswordPage from './pages/auth/ResetPasswordPage.jsx';
 import { DashboardPage } from './pages/DashboardPage.jsx';
 import { EmployeesPage } from './pages/employees/EmployeesPage.jsx';
 import { EmployeeDetailPage } from './pages/employees/EmployeeDetailPage.jsx';
+import { DepartmentsPage } from './pages/departments/DepartmentsPage.jsx';
+import { DepartmentDetailPage } from './pages/departments/DepartmentDetailPage.jsx';
+import { TeamsPage } from './pages/teams/TeamsPage.jsx';
+import { TeamDetailPage } from './pages/teams/TeamDetailPage.jsx';
 import { OrganizationPage } from './pages/organization/OrganizationPage.jsx';
 import UnauthorizedPage from './pages/UnauthorizedPage.jsx';
+
 
 import { LandingPage } from './pages/LandingPage.jsx';
 
@@ -48,7 +53,12 @@ const App = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/employees" element={<EmployeesPage />} />
             <Route path="/employees/:id" element={<EmployeeDetailPage />} />
+            <Route path="/departments" element={<DepartmentsPage />} />
+            <Route path="/departments/:id" element={<DepartmentDetailPage />} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/teams/:id" element={<TeamDetailPage />} />
             <Route path="/organization" element={<OrganizationPage />} />
+
           </Route>
 
           <Route path="/unauthorized" element={<UnauthorizedPage />} />

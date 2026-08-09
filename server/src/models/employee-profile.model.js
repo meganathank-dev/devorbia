@@ -39,13 +39,15 @@ const employeeProfileSchema = new Schema(
     },
     departmentId: {
       type: Schema.Types.ObjectId,
-      // ref: 'Department' -> Reserved for Phase 2B
+      ref: 'Department',
       default: null,
+      index: true,
     },
     teamId: {
       type: Schema.Types.ObjectId,
-      // ref: 'Team' -> Reserved for Phase 2B
+      ref: 'Team',
       default: null,
+      index: true,
     },
     skills: {
       type: [String],
