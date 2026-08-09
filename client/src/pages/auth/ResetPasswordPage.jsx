@@ -74,11 +74,11 @@ const ResetPasswordPage = () => {
       </CardHeader>
       <CardContent>
         {successMessage ? (
-          <div className="p-4 text-sm text-green-700 bg-green-50 rounded-md border border-green-200 text-center">
+          <div className="p-4 text-sm text-green-700 bg-green-50 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800 rounded-md border border-green-200 text-center">
             {successMessage}
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <Input
               label="Email Address"
               type="email"
@@ -131,7 +131,7 @@ const ResetPasswordPage = () => {
             </div>
 
             {serverError && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md border border-red-200">
+              <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800 rounded-md border border-red-200">
                 {serverError}
               </div>
             )}

@@ -59,7 +59,7 @@ const LoginPage = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <Input
             label="Email Address"
             type="email"
@@ -94,7 +94,7 @@ const LoginPage = () => {
           </div>
 
           {serverError && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md border border-red-200">
+            <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800 rounded-md border border-red-200">
               {serverError}
             </div>
           )}
