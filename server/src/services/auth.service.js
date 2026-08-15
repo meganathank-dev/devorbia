@@ -52,6 +52,8 @@ export const toSafeUser = (user) => ({
   email: user.email,
   role: user.role,
   accountStatus: user.accountStatus,
+  organizationId: user.organizationId || null,
+  profileId: user.profileId || null,
   lastLoginAt: user.lastLoginAt,
   createdAt: user.createdAt,
 });

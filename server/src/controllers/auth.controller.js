@@ -169,7 +169,7 @@ export const getMe = async (req, res, next) => {
     const user = await authService.getCurrentUser(req.user.id);
 
     sendSuccess(res, {
-      data: user,
+      data: { user },
       message: 'User retrieved successfully',
     });
   } catch (error) {

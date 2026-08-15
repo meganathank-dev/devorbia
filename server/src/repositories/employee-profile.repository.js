@@ -18,6 +18,8 @@ export const findManyByOrganization = async (organizationId, filters = {}, { ski
   const [data, total] = await Promise.all([
     EmployeeProfile.find(query)
       .populate('user', 'email employeeId role accountStatus')
+      .populate('departmentId', '_id name')
+      .populate('teamId', '_id name')
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
@@ -40,6 +42,8 @@ export const findManyByOrganization = async (organizationId, filters = {}, { ski
 export const findByIdAndOrganization = async (id, organizationId) => {
   return EmployeeProfile.findOne({ _id: id, organizationId })
     .populate('user', 'email employeeId role accountStatus')
+    .populate('departmentId', '_id name')
+    .populate('teamId', '_id name')
     .exec();
 };
 

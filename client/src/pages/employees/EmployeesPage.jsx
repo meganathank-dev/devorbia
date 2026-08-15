@@ -9,12 +9,21 @@ import { useEmployeeStore } from '../../stores/employee.store.js';
 import { Search, UserPlus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store.js';
 import { ROLES } from '../../constants/roles.js';
+import { AddEmployeeModal } from '../../components/employees/AddEmployeeModal.jsx';
 
 export const EmployeesPage = () => {
-  const { employees, pagination, isLoading, error, fetchEmployees } = useEmployeeStore();
+  const {
+    employees,
+    pagination,
+    isLoading,
+    error,
+    fetchEmployees,
+    createEmployee,
+  } = useEmployeeStore();
   const { user } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const canCreateEmployee = [ROLES.ORGANIZATION_ADMIN, ROLES.PROJECT_MANAGER].includes(user?.role);
 
@@ -38,7 +47,11 @@ export const EmployeesPage = () => {
           </p>
         </div>
         {canCreateEmployee && (
-          <Button variant="primary" className="flex items-center gap-2">
+          <Button
+            variant="primary"
+            className="flex items-center gap-2"
+            onClick={() => setIsAddModalOpen(true)}
+          >
             <UserPlus size={18} />
             Add Employee
           </Button>
@@ -156,6 +169,26 @@ export const EmployeesPage = () => {
           </div>
         )}
       </Card>
+      <AddEmployeeModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onCreate={async (data) => {
+          const success = await createEmployee(data);
+
+          if (success) {
+            await fetchEmployees({
+              page,
+              limit: 10,
+              search: searchTerm,
+            });
+            return true;
+          }
+
+          // Throw with specific backend error so the modal can display it
+          const { error: storeError } = useEmployeeStore.getState();
+          throw new Error(storeError || 'Failed to create employee');
+        }}
+      />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { sendSuccess } from '../utils/response.js';
+import { sendSuccess, sendPaginated } from '../utils/response.js';
 import * as employeeService from '../services/employee-profile.service.js';
 
 /**
@@ -30,7 +30,7 @@ export const getEmployees = async (req, res, next) => {
     const tenantId = req.tenantId;
     const result = await employeeService.getEmployees(tenantId, req.query);
 
-    sendSuccess(res, {
+    sendPaginated(res, {
       data: result.data,
       pagination: result.pagination,
       message: 'Employees retrieved successfully',
