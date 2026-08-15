@@ -37,8 +37,8 @@ export const getOrganizationById = async (id, tenantId) => {
   // We only allow fetching if the requested ID matches the user's tenantId.
   // super_admin might not have a tenantId, but they usually won't call this
   // endpoint for themselves unless we explicitly design a cross-tenant admin view.
-  if (id !== tenantId?.toString()) {
-    throw new NotFoundError('Organization not found'); // Safe IDOR prevention
+  if (String(id) !== String(tenantId)) {
+    throw new NotFoundError('Organization not found');
   }
 
   const org = await organizationRepository.findById(id);
