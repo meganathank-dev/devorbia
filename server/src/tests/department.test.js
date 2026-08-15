@@ -63,7 +63,7 @@ describe('Department Tenant Isolation', () => {
           })
         };
       });
-      mock.method(Department, 'countDocuments', (query) => {
+      mock.method(Department, 'countDocuments', () => {
         return { exec: async () => 0 };
       });
 

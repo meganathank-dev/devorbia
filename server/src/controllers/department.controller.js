@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { sendSuccess } from '../utils/response.js';
+import { sendSuccess, sendPaginated } from '../utils/response.js';
 import * as departmentService from '../services/department.service.js';
 
 /**
@@ -28,7 +28,7 @@ export const getDepartments = async (req, res, next) => {
   try {
     const result = await departmentService.getDepartments(req.tenantId, req.query);
 
-    sendSuccess(res, {
+    sendPaginated(res, {
       data: result.data,
       pagination: result.pagination,
       message: 'Departments retrieved successfully',
