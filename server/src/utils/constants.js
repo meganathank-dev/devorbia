@@ -1,0 +1,41 @@
+/**
+ * Centralized role constants.
+ * The system is designed to have one SUPER_ADMIN for the platform,
+ * and ORGANIZATION_ADMIN, PROJECT_MANAGER, TEAM_LEADER, EMPLOYEE for tenant organizations.
+ */
+const ROLES = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ORGANIZATION_ADMIN: 'ORGANIZATION_ADMIN',
+  PROJECT_MANAGER: 'PROJECT_MANAGER',
+  TEAM_LEADER: 'TEAM_LEADER',
+  EMPLOYEE: 'EMPLOYEE',
+};
+
+/**
+ * Centralized account status constants.
+ */
+const ACCOUNT_STATUS = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+};
+
+/**
+ * Common standard error codes for consistency across the application.
+ */
+const ERROR_CODES = {
+  AUTHENTICATION_REQUIRED: 'AUTHENTICATION_REQUIRED',
+  INVALID_ACCESS_TOKEN: 'INVALID_ACCESS_TOKEN',
+  INVALID_REFRESH_TOKEN: 'INVALID_REFRESH_TOKEN',
+  ACCOUNT_INACTIVE: 'ACCOUNT_INACTIVE',
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  FORBIDDEN: 'FORBIDDEN',
+  NOT_FOUND: 'NOT_FOUND',
+  INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+};
+
+module.exports = {
+  ROLES,
+  ACCOUNT_STATUS,
+  ERROR_CODES,
+};

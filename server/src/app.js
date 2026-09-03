@@ -16,12 +16,16 @@ app.use(
   })
 );
 
-// Body Parser Middleware
+// Body Parser & Cookie Middleware
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // API Routes
 app.use('/api/v1/health', healthRoutes);
+const authRoutes = require('./routes/auth.routes');
+app.use('/api/v1/auth', authRoutes);
 
 // Catch 404
 app.use((req, res, next) => {
