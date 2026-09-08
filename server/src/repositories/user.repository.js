@@ -16,6 +16,25 @@ class UserRepository {
     return User.findOne({ email: normalizedEmail });
   }
 
+  static async findById(id) {
+    return User.findById(id);
+  }
+
+  static async create(userData, options = {}) {
+    if (userData.email) {
+      userData.email = userData.email.toLowerCase().trim();
+    }
+    const user = new User(userData);
+    return user.save(options);
+  }
+
+  static async update(id, updateData) {
+    if (updateData.email) {
+      updateData.email = updateData.email.toLowerCase().trim();
+    }
+    return User.findByIdAndUpdate(id, updateData, { new: true });
+  }
+
   /**
    * Update the last login timestamp for a user.
    * 

@@ -12,11 +12,48 @@ const ROLES = {
 };
 
 /**
+ * Organization-level roles.
+ */
+const ORG_ROLES = {
+  OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
+  EMPLOYEE: 'EMPLOYEE',
+};
+
+/**
  * Centralized account status constants.
  */
 const ACCOUNT_STATUS = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
+};
+
+/**
+ * Organization status.
+ */
+const ORG_STATUS = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+};
+
+/**
+ * Membership status.
+ */
+const MEMBERSHIP_STATUS = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  REMOVED: 'REMOVED',
+};
+
+/**
+ * Invitation status/state.
+ */
+const INVITATION_STATUS = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED',
 };
 
 /**
@@ -36,6 +73,10 @@ const ERROR_CODES = {
 
 module.exports = {
   ROLES,
+  ORG_ROLES,
   ACCOUNT_STATUS,
+  ORG_STATUS,
+  MEMBERSHIP_STATUS,
+  INVITATION_STATUS,
   ERROR_CODES,
 };

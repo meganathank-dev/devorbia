@@ -25,7 +25,12 @@ app.use(cookieParser());
 // API Routes
 app.use('/api/v1/health', healthRoutes);
 const authRoutes = require('./routes/auth.routes');
+const organizationRoutes = require('./routes/organization.routes');
+const invitationRoutes = require('./routes/invitation.routes');
+
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/organizations', organizationRoutes);
+app.use('/api/v1', invitationRoutes);
 
 // Catch 404
 app.use((req, res, next) => {

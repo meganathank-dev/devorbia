@@ -73,8 +73,8 @@ const Home = () => {
                 <ShieldCheck className="w-5 h-5 text-slate-400" />
                 <span className="text-slate-700 font-medium">Authentication</span>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500">
-                PENDING PHASE 1
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                ACTIVE
               </span>
             </div>
           </div>
