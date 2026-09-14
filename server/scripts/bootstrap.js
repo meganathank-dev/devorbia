@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 const mongoose = require('mongoose');
 const { hashPassword } = require('../src/utils/password.util');
 const OrganizationService = require('../src/services/organization.service');
@@ -13,7 +13,7 @@ const runBootstrap = async () => {
     const orgSlug = process.env.BOOTSTRAP_ORG_SLUG;
     const ownerEmail = process.env.BOOTSTRAP_OWNER_EMAIL;
     const ownerPassword = process.env.BOOTSTRAP_OWNER_PASSWORD;
-    const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/devorbia';
+    const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/devorbia';
 
     if (!secret || !orgName || !orgSlug || !ownerEmail || !ownerPassword) {
       console.error('ERROR: Missing required bootstrap configuration.');
@@ -21,13 +21,7 @@ const runBootstrap = async () => {
       process.exit(1);
     }
 
-    // A secondary check: require the secret to be passed as an argument to confirm execution
-    const providedSecret = process.argv[2];
-    if (providedSecret !== secret) {
-      console.error('ERROR: Invalid or missing bootstrap secret.');
-      console.error('Usage: npm run bootstrap <BOOTSTRAP_SECRET>');
-      process.exit(1);
-    }
+
 
     // Connect to Database
     await mongoose.connect(mongoUri);
