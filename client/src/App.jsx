@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import AcceptInvitation from './pages/AcceptInvitation';
@@ -8,13 +8,14 @@ import AppLayout from './layouts/AppLayout';
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/app" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/accept-invite/:token" element={<AcceptInvitation />} />
       
       {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
+      <Route path="/app" element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route index element={<Home />} />
         </Route>
       </Route>
     </Routes>
