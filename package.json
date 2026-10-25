@@ -1,0 +1,35 @@
+{
+  "name": "devorbia",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run build --workspace client",
+    "start": "npm run start --workspace server",
+    "bootstrap": "npm run bootstrap --workspace server",
+    "seed:demo": "npm run seed:demo --workspace server",
+    "db:local": "node scripts/mongo-local.mjs",
+    "test": "node scripts/test.mjs",
+    "test:integration": "node scripts/test.mjs --integration",
+    "check": "node scripts/check.mjs",
+    "lint": "eslint client/src server/src server/scripts scripts tests",
+    "format": "prettier --write client/src server/src server/scripts scripts tests docs README.md"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4",
+    "eslint-plugin-react": "^7.37.5",
+    "@eslint/js": "^9.39.4",
+    "globals": "^16.5.0",
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4"
+  }
+}

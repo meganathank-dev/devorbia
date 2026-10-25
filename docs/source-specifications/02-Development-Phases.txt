@@ -1,0 +1,1462 @@
+# DevOrbia — Complete Project Building Phases
+
+This document defines the **official development roadmap** for building DevOrbia phase by phase.
+
+The project must **not be built completely in one step**. Each phase should be implemented, tested, verified, and stabilized before moving to the next phase.
+
+---
+
+# Phase 0 — Project Foundation & Architecture
+
+### Goal
+
+Create the complete technical foundation without implementing major business features.
+
+### Backend
+
+* Initialize Node.js project
+* Configure Express.js
+* Configure MongoDB + Mongoose
+* Configure environment variables
+* Configure Zod
+* Configure ESLint/formatting
+* Create API versioning: `/api/v1`
+* Create centralized configuration
+* Create centralized error handling foundation
+* Create logging foundation
+* Create health-check API
+* Establish layered architecture:
+
+  * Routes
+  * Controllers
+  * Services
+  * Repositories
+  * Models
+  * Middleware
+  * Validators
+  * Utilities
+
+### Frontend
+
+* Initialize React + Vite
+* Configure Tailwind CSS v4
+* Configure React Router
+* Configure Zustand
+* Configure Axios
+* Configure Lucide React
+* Create application layout foundation
+* Create sidebar
+* Create header
+* Create responsive layout
+* Create reusable UI components
+* Create loading, error and empty-state components
+
+### Testing
+
+* Basic backend test setup
+* Basic frontend test setup
+* Health API test
+
+### Documentation
+
+Create:
+
+* README
+* Environment documentation
+* Architecture documentation
+* API conventions
+* Development commands
+
+### Expected Result
+
+A clean MERN project skeleton that runs successfully on both frontend and backend.
+
+**No major business functionality yet.**
+
+---
+
+# Phase 1 — Authentication & Identity
+
+This phase establishes the security foundation.
+
+---
+
+## Phase 1A — Authentication Backend Foundation
+
+### Implement
+
+* User model
+* Password hashing
+* Authentication utilities
+* Access-token architecture
+* Refresh/session architecture
+* Secure cookie configuration
+* Authentication middleware
+* Current-user identification
+* Authentication error handling
+
+### Security
+
+Implement:
+
+* Password security
+* HTTP-only cookies where appropriate
+* Secure cookie configuration
+* Token expiration
+* Session handling
+* Environment-based secrets
+
+### Expected Result
+
+The backend can securely identify authenticated users.
+
+---
+
+# Phase 1B — Authentication APIs
+
+### Implement
+
+```text
+POST /api/v1/auth/login
+POST /api/v1/auth/logout
+POST /api/v1/auth/refresh
+POST /api/v1/auth/forgot-password
+POST /api/v1/auth/reset-password
+GET  /api/v1/auth/me
+```
+
+### Add
+
+* Zod validation
+* Consistent responses
+* Authentication errors
+* Rate limiting where appropriate
+* Security checks
+
+### Testing
+
+Test:
+
+* Valid login
+* Invalid login
+* Logout
+* Token/session expiration
+* Refresh
+* Forgot password
+* Reset password
+* Invalid input
+* Unauthorized requests
+
+### Expected Result
+
+Complete backend authentication system.
+
+---
+
+# Phase 1C — Authentication Frontend
+
+### Build
+
+* Login page
+* Forgot password page
+* Reset password page
+* Authentication store
+* Session initialization
+* Protected routes
+* Unauthorized page
+* Role-aware navigation foundation
+
+### Expected Result
+
+Users can securely log in and access protected areas.
+
+---
+
+# Phase 2 — Organization & Multi-Tenancy
+
+This is one of the **most critical phases** of DevOrbia.
+
+---
+
+## Phase 2A — Organization Management
+
+### Super Admin functionality
+
+Implement:
+
+* Create organization
+* View organizations
+* Edit organization
+* Activate organization
+* Deactivate organization
+* Organization statistics
+* Manage organization access
+
+### Important Rule
+
+Super Admin operates at the **DevOrbia platform level**.
+
+Super Admin does **not** participate in the internal management hierarchy of organizations.
+
+For example:
+
+Super Admin does not approve an organization's employee leave.
+
+---
+
+# Phase 2B — Multi-Tenant Architecture
+
+Implement organization isolation throughout the backend.
+
+### Rules
+
+Organization-owned resources must contain an organization reference.
+
+Examples:
+
+```text
+Employee → organizationId
+Department → organizationId
+Team → organizationId
+Project → organizationId
+Task → organizationId
+```
+
+### Secure Query Pattern
+
+Avoid:
+
+```text
+find project by projectId
+```
+
+Prefer:
+
+```text
+find project by projectId + authenticated organizationId
+```
+
+### Implement
+
+* Tenant middleware/context
+* Organization-scoped repositories
+* Organization authorization
+* Resource ownership validation
+* Cross-tenant protection
+
+### Critical Test
+
+User from Organization A attempts to access Organization B's project.
+
+Expected:
+
+**Access denied / resource not found.**
+
+Organization B data must never be returned.
+
+---
+
+# Phase 2C — Organization Admin
+
+Implement the Organization Admin role.
+
+Organization Admin can manage their organization but cannot access another organization.
+
+### Features
+
+* Organization profile
+* Organization settings
+* Organization employees
+* Departments
+* Teams
+* Organization-level dashboard foundation
+
+### Important Constraint
+
+Each organization initially has:
+
+**One Organization Admin**
+
+---
+
+# Phase 3 — Employee Management
+
+### Implement
+
+Employee model and APIs.
+
+### Employee information
+
+* Name
+* Email
+* Job title
+* Role
+* Organization
+* Department
+* Team
+* Employment status
+* Profile image
+* Joining date
+
+### Features
+
+* Add employee
+* Edit employee
+* View employee
+* Search
+* Filter
+* Pagination
+* Assign department
+* Assign team
+* Assign role
+* Activate/deactivate
+* View assigned projects
+* View assigned tasks
+* View workload
+
+### UI
+
+Create professional:
+
+* Employee directory
+* Employee cards/table
+* Employee profile
+* Search
+* Filters
+* Pagination
+* Empty states
+* Loading states
+
+### Security
+
+Only authorized organization users can manage employees.
+
+---
+
+# Phase 4 — Departments & Teams
+
+---
+
+## Phase 4A — Departments
+
+### Implement
+
+* Department model
+* Department APIs
+* Department UI
+
+### Features
+
+* Create
+* Edit
+* View
+* Archive
+* Department head
+* Members
+* Teams
+
+### Rules
+
+Prevent unsafe deletion when dependent data exists.
+
+---
+
+## Phase 4B — Teams
+
+### Implement
+
+* Team model
+* Team APIs
+* Team UI
+
+### Features
+
+* Create team
+* Edit team
+* View team
+* Assign Team Leader
+* Add members
+* Remove members
+* View workload
+* View projects
+* View progress
+
+### Organizational hierarchy
+
+```text
+Organization
+      ↓
+Department
+      ↓
+Team
+      ↓
+Employees
+```
+
+### Expected Result
+
+The organization's internal structure becomes fully manageable.
+
+---
+
+# Phase 5 — Project Management
+
+### Implement Project model
+
+Project fields include:
+
+* Project name
+* Project code
+* Description
+* Organization
+* Project Manager
+* Teams
+* Members
+* Start date
+* Deadline
+* Priority
+* Status
+* Tags
+* Progress
+* Created by
+
+### Project statuses
+
+```text
+Planning
+Active
+On Hold
+Completed
+Cancelled
+```
+
+### Priorities
+
+```text
+Low
+Medium
+High
+Critical
+```
+
+### Features
+
+* Create project
+* Edit project
+* View project
+* Archive project
+* Assign Project Manager
+* Assign teams
+* Add members
+* Remove members
+* Set deadline
+* Track progress
+* Search
+* Filter
+* Sort
+* Pagination
+* Project detail page
+
+### Security
+
+Project Managers must only manage projects they are authorized to manage.
+
+---
+
+# Phase 6 — Task Management
+
+### Implement Task model
+
+Task information:
+
+* Title
+* Description
+* Organization
+* Project
+* Team
+* Assignee
+* Creator
+* Priority
+* Status
+* Start date
+* Due date
+* Estimated effort
+* Tags
+
+### Features
+
+* Create task
+* Edit task
+* Assign task
+* Reassign task
+* Change priority
+* Change status
+* Set due date
+* Search
+* Filter
+* Sort
+* Pagination
+
+### Views
+
+Create:
+
+* Project tasks
+* Team tasks
+* Employee tasks
+* My tasks
+
+### Expected Result
+
+Tasks are properly connected with:
+
+**Organization → Project → Team → Employee**
+
+---
+
+# Phase 7 — Workflow & Kanban Board
+
+### Initial workflow
+
+```text
+Backlog
+   ↓
+To Do
+   ↓
+In Progress
+   ↓
+Review
+   ↓
+Done
+```
+
+### Implement
+
+* Workflow status validation
+* Status transition rules
+* Kanban board
+* Drag-and-drop
+* Task cards
+* Task details
+* Status updates
+
+### Important
+
+Drag-and-drop is only a frontend interaction.
+
+The backend must validate every status change.
+
+Unauthorized users must not be able to change task status through direct API requests.
+
+---
+
+# Phase 8 — Deadline & Project Progress Intelligence
+
+Before implementing advanced AI, establish reliable non-AI calculations.
+
+### Implement
+
+* Task completion percentage
+* Project completion percentage
+* Overdue task detection
+* Upcoming deadline detection
+* Project deadline status
+* Task priority analysis
+* Active/completed task counts
+
+### Example
+
+If:
+
+```text
+100 total tasks
+80 completed
+```
+
+Project task completion:
+
+**80%**
+
+### Delayed/Overdue
+
+If:
+
+```text
+Due date < Current date
+AND
+Task is not Done
+```
+
+then task becomes:
+
+**Overdue / Delayed**
+
+This data becomes the foundation for later AI features.
+
+---
+
+# Phase 9 — Leave Management
+
+Implement leave management before AI-powered leave analysis.
+
+### Features
+
+Users within the organization can:
+
+* Submit leave request
+* View leave requests
+* Cancel eligible requests
+* View leave history
+* View leave status
+
+### Leave statuses
+
+```text
+Pending
+Approved
+Rejected
+Cancelled
+```
+
+### Organization hierarchy
+
+Leave approval must follow the organization's internal authority structure.
+
+**Super Admin is NOT part of this approval chain.**
+
+### Leave rules
+
+The system should consider:
+
+* User role
+* Reporting authority
+* Team/project responsibility
+* Existing workload
+* Leave duration
+* Organizational policies
+
+### Expected Result
+
+Complete basic leave management system.
+
+---
+
+# Phase 10 — Email & Notification System
+
+Introduce communication functionality after the core modules exist.
+
+### Email events
+
+Examples:
+
+* Account-related notifications
+* Task assigned
+* Task reassigned
+* Deadline approaching
+* Task overdue
+* Leave submitted
+* Leave approved
+* Leave rejected
+* Project assignment
+* Important project updates
+
+### Architecture
+
+Create a notification service so future notification methods can be added without changing business logic.
+
+Possible future channels:
+
+```text
+Email
+In-app notification
+Real-time notification
+```
+
+---
+
+# Phase 11 — Role-Based Dashboards
+
+Create dashboards based on actual database information.
+
+---
+
+## Super Admin Dashboard
+
+Display:
+
+* Total organizations
+* Active organizations
+* Total platform users
+* Organization statistics
+* Platform-level usage
+
+---
+
+## Organization Admin Dashboard
+
+Display:
+
+* Employees
+* Departments
+* Teams
+* Projects
+* Active projects
+* Completed projects
+* Pending tasks
+* Overdue tasks
+* Organization workload
+* Performance
+
+---
+
+## Project Manager Dashboard
+
+Display:
+
+* Managed projects
+* Project progress
+* Overdue tasks
+* Upcoming deadlines
+* Team workload
+* Task distribution
+* Project health
+
+---
+
+## Team Leader Dashboard
+
+Display:
+
+* Team members
+* Team workload
+* Team progress
+* Pending tasks
+* Overdue tasks
+* Team performance
+
+---
+
+## Employee Dashboard
+
+Display:
+
+* My projects
+* My tasks
+* Tasks in progress
+* Upcoming deadlines
+* Completed tasks
+* Personal workload
+* Performance
+* Recognition
+
+---
+
+# Phase 12 — Performance & Recognition Intelligence
+
+Implement the foundation for performance measurement.
+
+### Metrics may include
+
+* Completed tasks
+* On-time completion
+* Priority of completed tasks
+* Consistency
+* Contribution
+* Workload
+* Project contribution
+* Team contribution
+
+### Recognition
+
+Possible categories:
+
+* Best Employee
+* Best Team
+* Best Team Leader
+* Top Contributor
+* Most Consistent Contributor
+
+### Important
+
+Recognition must be based on measurable criteria.
+
+Avoid selecting the "best employee" simply based on the number of tasks completed.
+
+---
+
+# Phase 13 — Analytics
+
+Create actual analytics from system data.
+
+### Analytics
+
+* Tasks by status
+* Tasks by priority
+* Project completion
+* Overdue tasks
+* Team workload
+* Employee workload
+* Completed tasks over time
+* Upcoming deadlines
+* Active vs completed projects
+* Work distribution
+
+### Principle
+
+Every chart must answer a useful management question.
+
+Avoid decorative analytics.
+
+---
+
+# Phase 14 — AI Resource Assignment 🤖
+
+Now introduce the first major AI capability.
+
+### AI should analyze
+
+* Employee skills
+* Job role
+* Department
+* Team
+* Previous project experience
+* Current workload
+* Current assignments
+* Availability
+* Task requirements
+* Estimated effort
+* Deadline
+* Priority
+
+### AI output
+
+AI can recommend:
+
+* Best team
+* Suitable employees
+* Suitable project members
+* Suitable task assignees
+
+### Important
+
+AI provides:
+
+**Recommendation**
+
+not automatic assignment.
+
+Authorized managers make the final decision.
+
+---
+
+# Phase 15 — AI Workload Balancing ⚖️
+
+AI analyzes workload across employees and teams.
+
+### Consider
+
+* Number of active tasks
+* Task priority
+* Estimated effort
+* Deadline
+* Task complexity
+* Current projects
+* Availability
+
+### AI can identify
+
+* Overloaded employees
+* Underutilized employees
+* Uneven distribution
+* Potential capacity problems
+
+### AI recommendation
+
+Example:
+
+> Employee A is overloaded. Task X could be reassigned to Employee B based on workload and required skills.
+
+Final decision remains with the authorized manager.
+
+---
+
+# Phase 16 — AI Project Risk & Health Detection 🚨
+
+AI analyzes multiple project signals.
+
+### Signals
+
+* Task completion rate
+* Overdue tasks
+* Critical tasks
+* Project deadline
+* Current progress
+* Team workload
+* Delayed work
+* Task distribution
+
+### Project health
+
+Possible states:
+
+```text
+Healthy
+Warning
+At Risk
+Critical
+```
+
+### AI output
+
+The system should explain **why** the project is considered risky.
+
+Example:
+
+> Project is at risk because critical tasks are overdue and the deadline is approaching.
+
+Avoid unexplained AI scores.
+
+---
+
+# Phase 17 — Leave Impact Analysis & Smart Reassignment 🏖️
+
+Connect leave management with projects and tasks.
+
+When a user requests leave, analyze:
+
+* Assigned tasks
+* Task deadlines
+* Task priorities
+* Critical tasks
+* Project deadline
+* Team availability
+* Other employees' workload
+
+### System output
+
+Example:
+
+> Leave may affect 2 high-priority tasks and 1 project deadline.
+
+AI can recommend:
+
+* Temporary reassignment
+* Alternative employee
+* Task redistribution
+* Deadline risk
+
+### Important
+
+Leave should not be automatically rejected or approved solely by AI.
+
+AI provides decision support.
+
+Authorized organizational users make the final decision.
+
+---
+
+# Phase 18 — Performance & Recognition Intelligence 🏆
+
+Enhance the earlier performance system using intelligent analysis.
+
+### Analyze
+
+* Work completed
+* On-time performance
+* Task priority
+* Contribution
+* Consistency
+* Team contribution
+* Project contribution
+* Workload context
+
+### Generate
+
+* Performance insights
+* Recognition recommendations
+* Team rankings
+* Contribution summaries
+* Improvement suggestions
+
+### Important
+
+The system must avoid unfairly rewarding employees simply because they have more tasks.
+
+Workload and task difficulty should be considered.
+
+---
+
+# Phase 19 — Natural Language AI Assistant
+
+Introduce an AI interface for authorized management queries.
+
+Examples:
+
+> "Which tasks are overdue?"
+
+> "Which project is currently at risk?"
+
+> "Who has the highest workload?"
+
+> "Summarize this week's project activity."
+
+> "What tasks require immediate attention?"
+
+### Security requirement
+
+The AI must operate **inside the user's authorization boundaries**.
+
+For example:
+
+An Employee asking about organization-wide confidential information must not receive information they normally cannot access.
+
+AI must never bypass:
+
+* RBAC
+* Tenant isolation
+* Resource permissions
+
+---
+
+# Phase 20 — Advanced Notifications & Activity System
+
+Implement:
+
+### Notifications
+
+* Task assignment
+* Reassignment
+* Deadline reminders
+* Leave updates
+* Project updates
+* Mentions
+
+### Activity feed
+
+Track important events such as:
+
+* Project creation
+* Task creation
+* Assignment
+* Status changes
+* Team membership changes
+* Administrative actions
+
+### Future
+
+Prepare architecture for:
+
+* Real-time notifications
+* WebSockets
+* In-app notification center
+
+---
+
+# Phase 21 — Security Hardening
+
+Perform a complete security review.
+
+### Authentication
+
+Check:
+
+* Password security
+* Session security
+* Token handling
+* Cookie configuration
+
+### Authorization
+
+Check:
+
+* RBAC
+* Resource permissions
+* Role boundaries
+* Organization boundaries
+
+### Multi-Tenancy
+
+Test:
+
+* Cross-tenant project access
+* Cross-tenant employee access
+* Cross-tenant task access
+* Cross-tenant department access
+* Cross-tenant team access
+* Cross-tenant analytics
+
+### API Security
+
+Check:
+
+* Input validation
+* Rate limiting
+* Request-size limits
+* CORS
+* Security headers
+* Error leakage
+* Pagination limits
+
+---
+
+# Phase 22 — Testing & Quality Assurance
+
+Perform comprehensive testing.
+
+### Unit tests
+
+Test:
+
+* Services
+* Repositories
+* Utilities
+* Validators
+* Business rules
+
+### Integration tests
+
+Test:
+
+* Authentication
+* APIs
+* Database operations
+* Authorization
+* Workflow
+
+### Security tests
+
+Especially:
+
+**Tenant isolation**
+
+**IDOR prevention**
+
+**RBAC**
+
+**Unauthorized API access**
+
+### End-to-End testing
+
+Test complete workflows.
+
+Example:
+
+```text
+Create organization
+      ↓
+Create employee
+      ↓
+Create department
+      ↓
+Create team
+      ↓
+Create project
+      ↓
+Assign team
+      ↓
+Create task
+      ↓
+Assign employee
+      ↓
+Employee completes task
+      ↓
+Project progress updates
+```
+
+---
+
+# Phase 23 — UI/UX & Accessibility Hardening
+
+Perform a complete frontend review.
+
+Check:
+
+* Responsive design
+* Desktop
+* Tablet
+* Mobile
+* Typography
+* Spacing
+* Navigation
+* Forms
+* Validation
+* Loading states
+* Empty states
+* Error states
+* Confirmation dialogs
+* Toasts
+* Accessibility
+* Keyboard navigation
+* Focus states
+* Disabled states
+
+### Design principle
+
+DevOrbia should look like a **professional B2B SaaS management platform**.
+
+It should not look like:
+
+* A college CRUD application
+* An IDE
+* A code editor
+* A generic task-list application
+* An overly animated AI website
+
+---
+
+# Phase 24 — Performance Optimization
+
+Review:
+
+### Frontend
+
+* Bundle size
+* Lazy loading
+* Rendering performance
+* API caching where appropriate
+* Pagination
+
+### Backend
+
+* Database queries
+* Indexes
+* Query limits
+* Pagination
+* API response size
+
+### MongoDB
+
+Review indexes according to actual query patterns.
+
+Avoid unnecessary indexes.
+
+---
+
+# Phase 25 — Production Readiness
+
+Prepare the application for deployment.
+
+### Backend
+
+* Production environment configuration
+* Secure secrets
+* Logging
+* Error handling
+* CORS
+* Rate limiting
+* Database configuration
+
+### Frontend
+
+* Production build
+* Environment configuration
+* API configuration
+* Error handling
+
+### Documentation
+
+Update:
+
+* README
+* Installation
+* Environment setup
+* API documentation
+* Architecture
+* Security
+* Testing
+* Deployment
+
+---
+
+# Phase 26 — Final Validation & Project Demonstration
+
+Before declaring DevOrbia complete, verify the complete system.
+
+### Demonstrate
+
+**1. Authentication**
+
+Login → authorization → logout
+
+**2. Organization**
+
+Super Admin → organization creation/access
+
+**3. Organization Management**
+
+Organization Admin → employees → departments → teams
+
+**4. Project Management**
+
+Project Manager → project → teams → members
+
+**5. Task Management**
+
+Project → tasks → employees → workflow
+
+**6. Progress**
+
+Tasks → project progress → dashboards
+
+**7. Leave**
+
+Employee → leave request → authority → approval/rejection
+
+**8. Email**
+
+Important events → notifications
+
+**9. AI Resource Assignment**
+
+Project/task → AI recommendation → manager decision
+
+**10. AI Workload Balancing**
+
+Workload → AI analysis → recommendation
+
+**11. AI Project Risk**
+
+Project data → AI analysis → health/risk
+
+**12. Leave Impact**
+
+Leave request → impact analysis → reassignment recommendation
+
+**13. Performance**
+
+Actual work data → performance analysis → recognition
+
+**14. Security**
+
+Organization A → attempt Organization B access → denied
+
+---
+
+# Official Development Order
+
+The complete development sequence should be:
+
+```text
+PHASE 0
+Project Foundation
+        ↓
+PHASE 1
+Authentication & Identity
+        ↓
+PHASE 2
+Organization + Multi-Tenancy
+        ↓
+PHASE 3
+Employee Management
+        ↓
+PHASE 4
+Departments + Teams
+        ↓
+PHASE 5
+Project Management
+        ↓
+PHASE 6
+Task Management
+        ↓
+PHASE 7
+Workflow + Kanban
+        ↓
+PHASE 8
+Progress + Deadline Intelligence
+        ↓
+PHASE 9
+Leave Management
+        ↓
+PHASE 10
+Email + Notifications
+        ↓
+PHASE 11
+Role-Based Dashboards
+        ↓
+PHASE 12
+Performance + Recognition
+        ↓
+PHASE 13
+Analytics
+        ↓
+PHASE 14
+AI Resource Assignment
+        ↓
+PHASE 15
+AI Workload Balancing
+        ↓
+PHASE 16
+AI Project Risk Detection
+        ↓
+PHASE 17
+Leave Impact + Smart Reassignment
+        ↓
+PHASE 18
+Performance Intelligence
+        ↓
+PHASE 19
+Natural Language AI
+        ↓
+PHASE 20
+Advanced Notifications + Activity
+        ↓
+PHASE 21
+Security Hardening
+        ↓
+PHASE 22
+Testing + QA
+        ↓
+PHASE 23
+UI/UX Hardening
+        ↓
+PHASE 24
+Performance Optimization
+        ↓
+PHASE 25
+Production Readiness
+        ↓
+PHASE 26
+Final Validation + Demonstration
+```
+
+---
+
+# 🚨 Most Important Development Rule
+
+**Do NOT ask Antigravity IDE to build all 26 phases at once.**
+
+For each phase:
+
+```text
+Understand current project
+        ↓
+Inspect existing files
+        ↓
+Plan the phase
+        ↓
+Implement only that phase
+        ↓
+Run the application
+        ↓
+Test the phase
+        ↓
+Fix issues
+        ↓
+Verify existing features still work
+        ↓
+Document completion
+        ↓
+Move to next phase
+```
+
+### AI features must come after the core platform.
+
+The correct order is:
+
+**Reliable data → Reliable business logic → Reliable analytics → AI intelligence**
+
+not:
+
+**AI first → build the actual application later.**
+
+This approach will keep DevOrbia **secure, maintainable, testable, and realistic enough for a final-year project and portfolio-level demonstration.**

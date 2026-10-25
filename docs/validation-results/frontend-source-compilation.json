@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-09-16T03:02:33.730Z",
+  "tool": "esbuild",
+  "version": "0.28.0",
+  "result": "passed",
+  "mode": "source compilation with all external npm packages unresolved",
+  "localInputs": 25,
+  "javaScriptAndJSX": 24,
+  "css": 1,
+  "limitations": [
+    "Not a full Vite build",
+    "External dependency exports not validated",
+    "Browser and API runtime not exercised"
+  ]
+}

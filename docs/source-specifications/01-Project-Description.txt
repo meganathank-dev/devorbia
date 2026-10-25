@@ -1,0 +1,3339 @@
+====================================================================
+                         DEVORBIA
+        AI-POWERED SOFTWARE DEVELOPMENT MANAGEMENT PLATFORM
+                    MASTER PROJECT SPECIFICATION
+====================================================================
+
+Document Purpose:
+This document is the master reference for the complete DevOrbia
+project. It defines the finalized product vision, requirements,
+architecture, roles, modules, workflows, AI capabilities, security
+rules, UI/UX direction, technology stack, development roadmap, and
+development principles.
+
+IMPORTANT:
+This document is stored outside the DevOrbia project root and should
+be treated as the authoritative project specification.
+
+====================================================================
+1. PROJECT IDENTITY
+====================================================================
+
+Project Name:
+DevOrbia
+
+Project Type:
+AI-Powered Software Development Management Platform
+
+Primary Category:
+B2B SaaS / Software Development Organization Management
+
+Target:
+A professional software-development management platform for
+organizations, teams, project managers, team leaders, and employees.
+
+Core Purpose:
+DevOrbia is a centralized management and decision-support platform
+for software development organizations.
+
+It manages:
+
+- Organizations
+- Departments
+- Teams
+- Employees
+- Projects
+- Tasks
+- Workflows
+- Workload
+- Deadlines
+- Leave
+- Performance
+- Notifications
+- Analytics
+- AI-powered management intelligence
+
+DevOrbia is NOT an IDE, code editor, compiler, code execution
+platform, Git replacement, or developer coding environment.
+
+====================================================================
+2. CORE PRODUCT PRINCIPLE
+====================================================================
+
+DevOrbia is a MANAGEMENT TOOL, not a SOFTWARE DEVELOPMENT EXECUTION
+TOOL.
+
+Developers continue to use their normal tools such as:
+
+- VS Code
+- IntelliJ IDEA
+- GitHub
+- GitLab
+- Postman
+- Figma
+- Other development tools
+
+DevOrbia manages the people, projects, responsibilities, workload,
+deadlines, risks, and organizational decisions surrounding software
+development.
+
+Example:
+
+A developer may use VS Code to implement:
+
+"Payment Gateway Integration"
+
+DevOrbia manages:
+
+- Who is responsible
+- Which project it belongs to
+- Priority
+- Deadline
+- Status
+- Estimated effort
+- Dependencies
+- Workload
+- Project impact
+- Progress
+- Risk
+
+Therefore:
+
+DEVELOPER EXECUTION:
+VS Code / GitHub / other tools
+
+DEVELOPMENT MANAGEMENT:
+DevOrbia
+
+====================================================================
+3. PROBLEM STATEMENT
+====================================================================
+
+Software development organizations often use multiple disconnected
+systems to manage their operations.
+
+For example:
+
+- Employee information in one system
+- Teams in another system
+- Projects in another tool
+- Tasks in another tool
+- Leave requests through email or manual processes
+- Workload tracked through spreadsheets
+- Performance tracked manually
+- Reports prepared manually
+
+This creates:
+
+- Fragmented information
+- Duplicate data
+- Poor visibility
+- Poor coordination
+- Manual workload tracking
+- Difficulty identifying project risks
+- Difficulty assigning work intelligently
+- Difficulty understanding employee capacity
+- Difficulty understanding leave impact
+- Difficulty identifying performance
+- Difficulty managing multiple organizations securely
+
+DevOrbia solves these problems through a centralized,
+organization-aware management platform.
+
+====================================================================
+4. CORE ORGANIZATIONAL MODEL
+====================================================================
+
+The core DevOrbia relationship is:
+
+Organization
+    |
+    +-- Departments
+    |       |
+    |       +-- Teams
+    |               |
+    |               +-- Employees
+    |
+    +-- Projects
+            |
+            +-- Teams
+            |
+            +-- Employees
+            |
+            +-- Tasks
+
+Conceptually:
+
+Organization
+    ↓
+Departments
+    ↓
+Teams
+    ↓
+Employees
+    ↓
+Projects
+    ↓
+Tasks
+    ↓
+Workflow
+
+Employees may be associated with:
+
+- Organization
+- Department
+- Team
+- Projects
+- Tasks
+
+====================================================================
+5. MULTI-TENANT ARCHITECTURE
+====================================================================
+
+Multi-tenancy is a core requirement.
+
+Each organization is an independent tenant.
+
+Example:
+
+Organization A
+    - Employees A
+    - Departments A
+    - Teams A
+    - Projects A
+    - Tasks A
+
+Organization B
+    - Employees B
+    - Departments B
+    - Teams B
+    - Projects B
+    - Tasks B
+
+Organization A must NEVER be able to access Organization B data.
+
+Tenant isolation must be enforced at:
+
+- Authentication
+- Authorization
+- Service layer
+- Repository layer
+- Database query level
+
+It must NOT depend only on frontend filtering.
+
+Organization-owned resources should contain an organization reference.
+
+Normal resource retrieval should use a combination such as:
+
+resource ID + authenticated organization ID
+
+rather than:
+
+resource ID only
+
+This prevents:
+
+- Cross-tenant access
+- IDOR
+- Data leakage
+- Unauthorized resource retrieval
+
+====================================================================
+6. PLATFORM STRUCTURE
+====================================================================
+
+There is exactly:
+
+ONE SUPER ADMIN for the entire DevOrbia platform.
+
+There is exactly:
+
+ONE ORGANIZATION ADMIN for each organization.
+
+Structure:
+
+DEVORBIA PLATFORM
+        |
+        +-- ONE SUPER ADMIN
+                |
+                +-- Organization A
+                |       |
+                |       +-- ONE Organization Admin
+                |       +-- Project Managers
+                |       +-- Team Leaders
+                |       +-- Employees
+                |
+                +-- Organization B
+                |       |
+                |       +-- ONE Organization Admin
+                |       +-- Project Managers
+                |       +-- Team Leaders
+                |       +-- Employees
+                |
+                +-- Organization C
+                        |
+                        +-- ONE Organization Admin
+                        +-- Project Managers
+                        +-- Team Leaders
+                        +-- Employees
+
+====================================================================
+7. SUPER ADMIN
+====================================================================
+
+Super Admin is a PLATFORM-LEVEL role.
+
+Super Admin is NOT an employee of any organization.
+
+Super Admin has NO operational relationship with organization users.
+
+Super Admin does NOT:
+
+- Manage organization employees
+- Assign employee tasks
+- Manage organization projects
+- Approve employee leave
+- Manage organization teams
+- Manage organization departments
+- Control organization workflows
+
+Super Admin's responsibility is limited to platform administration.
+
+Super Admin can:
+
+- Create organizations
+- Manage organizations
+- Activate organizations
+- Deactivate organizations
+- View platform-level statistics
+- Manage organization access
+- Create/assign the organization's initial administrator
+- Monitor platform usage
+
+Important:
+
+Super Admin gives an organization access to the DevOrbia platform.
+
+After organization onboarding, the organization operates independently.
+
+====================================================================
+8. ORGANIZATION ADMIN
+====================================================================
+
+There is exactly ONE Organization Admin per organization.
+
+Organization Admin is the highest operational authority INSIDE
+that organization.
+
+Organization Admin can:
+
+- Manage organization profile
+- Manage employees
+- Create/invite users
+- Assign organizational roles
+- Manage departments
+- Manage teams
+- Assign employees to departments
+- Assign employees to teams
+- Manage organization settings
+- View organization dashboards
+- View organization analytics
+- Manage organization-level operations
+- Manage leave administration according to organization policy
+
+Organization Admin cannot:
+
+- Access another organization
+- Manage another organization
+- Act as Super Admin
+- Change platform-level configuration
+
+Organization Admin is independent from the Super Admin in day-to-day
+organization operations.
+
+====================================================================
+9. PROJECT MANAGER
+====================================================================
+
+Project Manager is responsible for software-development projects
+within authorized organization/project scope.
+
+Project Manager can:
+
+- Create projects
+- Edit projects
+- View projects
+- Archive projects
+- Assign teams
+- Add project members
+- Remove project members
+- Set deadlines
+- Set priority
+- Manage project status
+- Create tasks
+- Assign tasks
+- Reassign tasks
+- Change permitted task fields
+- Monitor project progress
+- Monitor workload
+- View project analytics
+- View project health
+- Manage project board
+- Review AI recommendations
+
+Project Manager must only access projects and resources they are
+authorized to access.
+
+====================================================================
+10. TEAM LEADER
+====================================================================
+
+Team Leader coordinates assigned teams and permitted projects.
+
+Team Leader can:
+
+- View team members
+- View team workload
+- View assigned projects
+- Create permitted tasks
+- Assign permitted tasks
+- Reassign permitted tasks
+- Update tasks
+- Change permitted task statuses
+- Monitor progress
+- View team performance
+- Review AI recommendations
+- Monitor deadlines
+- Review leave impact where authorized
+
+Team Leader cannot operate outside their authorized scope.
+
+====================================================================
+11. EMPLOYEE
+====================================================================
+
+Employee is a normal software-development organization member.
+
+Employee can:
+
+- View assigned projects
+- View assigned tasks
+- View permitted team information
+- Update permitted task fields
+- Change permitted task status
+- View deadlines
+- View personal workload
+- View personal performance
+- Apply for leave
+- View leave history
+- Receive notifications
+- View relevant dashboard information
+
+Employee cannot:
+
+- Manage organization
+- Manage departments
+- Manage unrelated teams
+- Manage users
+- Access unauthorized projects
+- Access another organization
+- Perform administrative operations
+
+====================================================================
+12. ACCOUNT CREATION AND AUTHENTICATION
+====================================================================
+
+DevOrbia should NOT have public self-registration.
+
+There should NOT be a public:
+
+"Create Account / Sign Up"
+
+button for random visitors.
+
+Account onboarding is controlled.
+
+Flow:
+
+ONE SUPER ADMIN
+    ↓
+Creates Organization
+    ↓
+Creates/assigns ONE Organization Admin
+    ↓
+Organization Admin
+    ↓
+Invites/creates users
+    ↓
+Invitation
+    ↓
+Account activation
+    ↓
+User sets password
+    ↓
+User logs in
+
+Authentication screens:
+
+1. Login
+2. Forgot Password
+3. Reset Password
+4. Accept Invitation / Account Activation
+5. Logout
+
+No uncontrolled public signup.
+
+====================================================================
+13. AUTHENTICATION ARCHITECTURE
+====================================================================
+
+Authentication should include:
+
+- Login
+- Logout
+- Forgot password
+- Reset password
+- Access authentication
+- Refresh authentication
+- Secure session handling
+- Authentication middleware
+- Current-user API
+- Protected routes
+- Role-aware routes
+
+Authentication information should be logically separated from
+employee business information.
+
+USER MODEL:
+
+- Email
+- Password hash
+- Role
+- Authentication state
+- Organization reference where appropriate
+- Session-related information
+
+EMPLOYEE MODEL:
+
+- Name
+- Job title
+- Department
+- Team
+- Organization
+- Employment information
+- Profile information
+
+Use secure password hashing.
+
+Use HTTP-only cookies where appropriate.
+
+Never expose sensitive authentication information unnecessarily.
+
+====================================================================
+14. ROLE-BASED ACCESS CONTROL
+====================================================================
+
+RBAC must be enforced on the BACKEND.
+
+Frontend route protection is for usability only.
+
+Frontend restrictions are NOT security.
+
+Backend must verify:
+
+1. Authentication
+2. Role
+3. Organization
+4. Resource permissions
+5. Ownership/relationship
+6. Business rules
+
+Example:
+
+Employee attempts:
+
+POST /api/v1/organizations
+
+Result:
+
+403 Forbidden
+
+Example:
+
+Project Manager changes another organization's project ID.
+
+Result:
+
+Access denied or resource not found according to security strategy.
+
+====================================================================
+15. ORGANIZATION MODULE
+====================================================================
+
+Organization fields may include:
+
+- Organization ID
+- Name
+- Description
+- Logo
+- Email
+- Website
+- Status
+- Settings
+- Created date
+- Updated date
+
+Features:
+
+- Create organization
+- View organization
+- Edit organization
+- Activate organization
+- Deactivate organization
+- View statistics
+- Manage organization administrator
+
+====================================================================
+16. EMPLOYEE MANAGEMENT
+====================================================================
+
+Employee information may include:
+
+- Employee ID
+- First name
+- Last name
+- Full name
+- Email
+- Job title
+- Application role
+- Organization
+- Department
+- Team
+- Employment status
+- Profile image
+- Joining date
+- Created date
+- Updated date
+
+Features:
+
+- Add employee
+- Invite employee
+- Edit employee
+- View employee
+- Search
+- Filter
+- Pagination
+- Assign department
+- Assign team
+- Assign role
+- Activate employee
+- Deactivate employee
+- View workload
+- View projects
+- View tasks
+- View performance
+
+Employee directory should look like a professional company directory,
+not a basic CRUD table.
+
+====================================================================
+17. DEPARTMENT MANAGEMENT
+====================================================================
+
+Departments represent major organizational divisions.
+
+Examples:
+
+- Engineering
+- Quality Assurance
+- UI/UX
+- DevOps
+- Product
+- Support
+
+Fields:
+
+- Name
+- Description
+- Department head
+- Organization
+- Status
+- Created date
+- Updated date
+
+Features:
+
+- Create department
+- Edit department
+- View department
+- Archive department
+- Assign department head
+- Add employees
+- Remove employees
+- View department members
+- View department teams
+- View department statistics
+
+Deletion must be safe when dependencies exist.
+
+====================================================================
+18. TEAM MANAGEMENT
+====================================================================
+
+Teams are groups of employees working together.
+
+Examples:
+
+- Frontend Team
+- Backend Team
+- QA Team
+- DevOps Team
+- Mobile Team
+
+Fields:
+
+- Team name
+- Description
+- Department
+- Team leader
+- Team members
+- Organization
+- Status
+- Created date
+- Updated date
+
+Features:
+
+- Create team
+- Edit team
+- View team
+- Assign team leader
+- Add members
+- Remove members
+- View projects
+- View workload
+- View progress
+- View performance
+- Search
+- Filter
+
+====================================================================
+19. PROJECT MANAGEMENT
+====================================================================
+
+Projects represent software-development initiatives.
+
+Fields:
+
+- Project name
+- Project code
+- Description
+- Organization
+- Project manager
+- Assigned teams
+- Project members
+- Start date
+- Deadline
+- Priority
+- Status
+- Progress
+- Tags
+- Created by
+- Created date
+- Updated date
+
+Project statuses:
+
+- Planning
+- Active
+- On Hold
+- Completed
+- Cancelled
+
+Project priorities:
+
+- Low
+- Medium
+- High
+- Critical
+
+Features:
+
+- Create
+- Edit
+- View
+- Archive
+- Assign manager
+- Assign teams
+- Add members
+- Remove members
+- Set dates
+- Set deadline
+- Track progress
+- Search
+- Filter
+- Sort
+- Pagination
+- Project details
+- Project board
+- Project analytics
+- Project health
+
+====================================================================
+20. TASK MANAGEMENT
+====================================================================
+
+Tasks are management records representing units of development work.
+
+A task does NOT mean the developer writes code inside DevOrbia.
+
+The actual development happens in external development tools.
+
+Task fields:
+
+- Title
+- Description
+- Project
+- Organization
+- Assigned employee
+- Assigned team
+- Creator
+- Priority
+- Status
+- Start date
+- Due date
+- Tags
+- Estimated effort
+- Created date
+- Updated date
+
+Task priorities:
+
+- Low
+- Medium
+- High
+- Critical
+
+Features:
+
+- Create
+- Edit
+- Assign
+- Reassign
+- Change priority
+- Change status
+- Set due date
+- Search
+- Filter
+- Sort
+- Pagination
+- Project task view
+- Team task view
+- Employee task view
+- Overdue detection
+
+====================================================================
+21. TASK WORKFLOW
+====================================================================
+
+Primary workflow:
+
+BACKLOG
+    ↓
+TO DO
+    ↓
+IN PROGRESS
+    ↓
+REVIEW
+    ↓
+DONE
+
+Additional task conditions:
+
+- OVERDUE
+- BLOCKED
+
+Overdue and blocked are independent conditions.
+
+Example:
+
+A task can be:
+
+IN PROGRESS
++
+OVERDUE
++
+BLOCKED
+
+Status transitions should be validated by backend business rules.
+
+Unauthorized users must not be able to modify status through API
+manipulation.
+
+====================================================================
+22. TASK COMPLETION
+====================================================================
+
+A task is considered complete when its authorized workflow state
+becomes:
+
+DONE
+
+However, the system should maintain the distinction between:
+
+- Workflow status
+- Deadline state
+- Blocking state
+
+Examples:
+
+IN PROGRESS
+Deadline passed
+=> OVERDUE
+
+DONE
+Deadline passed
+=> Completed but potentially late
+
+IN PROGRESS
+Blocked by another task
+=> BLOCKED
+
+This provides accurate project analytics.
+
+====================================================================
+23. PROJECT COMPLETION
+====================================================================
+
+A project may be considered operationally complete when:
+
+- Required work is completed
+- Critical tasks are completed
+- Project Manager confirms completion
+- Project status is changed to COMPLETED
+
+Project completion should not depend only on percentage.
+
+Example:
+
+A project showing 98% progress but containing one critical unfinished
+task should not automatically be considered fully complete.
+
+====================================================================
+24. KANBAN BOARD
+====================================================================
+
+Project tasks should be available in Kanban format.
+
+Columns:
+
+- Backlog
+- To Do
+- In Progress
+- Review
+- Done
+
+Task cards may show:
+
+- Title
+- Priority
+- Assignee
+- Due date
+- Tags
+- Status
+
+Authorized users may move tasks between columns.
+
+Backend must validate every status change.
+
+====================================================================
+25. LEAVE MANAGEMENT
+====================================================================
+
+Leave management is part of the workforce-management layer.
+
+Users such as:
+
+- Organization Admin
+- Project Manager
+- Team Leader
+- Employee
+
+may have leave functionality according to their organizational
+permissions.
+
+Users can:
+
+- Apply for leave
+- View leave history
+- View request status
+- Cancel eligible requests
+
+Leave statuses:
+
+- PENDING
+- APPROVED
+- REJECTED
+- CANCELLED
+
+Important:
+
+SUPER ADMIN is NOT responsible for organization employee leave.
+
+Super Admin has no operational relationship with organization
+employees.
+
+Leave approval happens within the organization according to the
+organization's authority structure.
+
+====================================================================
+26. LEAVE IMPACT ANALYSIS
+====================================================================
+
+When a user requests leave, DevOrbia can analyze:
+
+- Active tasks
+- Task deadlines
+- Project deadlines
+- Task priority
+- Dependencies
+- Team capacity
+- Employee workload
+- Existing commitments
+
+The system should identify potential conflicts.
+
+Example:
+
+Employee requests leave:
+
+September 10 - September 14
+
+The employee has:
+
+- 2 active tasks
+- 1 critical task
+- 1 task due September 11
+
+DevOrbia may show:
+
+HIGH IMPACT
+
+2 tasks are affected.
+1 critical task overlaps the leave period.
+
+Important:
+
+The system should WARN about conflicts.
+
+It should NOT automatically reject leave simply because there is a
+project impact.
+
+====================================================================
+27. EMAIL AND NOTIFICATIONS
+====================================================================
+
+DevOrbia should support in-app notifications and email notifications.
+
+Potential events:
+
+- Task assigned
+- Task reassigned
+- Task status changed
+- Task overdue
+- Deadline approaching
+- Project assignment
+- Project update
+- Leave requested
+- Leave approved
+- Leave rejected
+- Important workload warning
+- AI risk warning
+
+Architecture:
+
+Application Event
+    ↓
+Notification Service
+    ↓
+Email Service
+    ↓
+SMTP Provider
+
+Use free-tier/free SMTP services where practical.
+
+Free email providers have sending limits.
+
+====================================================================
+28. DASHBOARDS
+====================================================================
+
+Every major organization role should have a role-aware dashboard.
+
+Dashboard should show information relevant to the current user.
+
+--------------------------------------------------------------------
+SUPER ADMIN DASHBOARD
+--------------------------------------------------------------------
+
+May display:
+
+- Total organizations
+- Active organizations
+- Inactive organizations
+- Total platform users
+- Organization growth
+- Platform usage
+- Platform statistics
+
+No organization operational data should be shown unnecessarily.
+
+--------------------------------------------------------------------
+ORGANIZATION ADMIN DASHBOARD
+--------------------------------------------------------------------
+
+May display:
+
+- Total employees
+- Departments
+- Teams
+- Active projects
+- Completed projects
+- Pending tasks
+- Overdue tasks
+- Organization workload
+- Project health
+- Leave summary
+- Performance/recognition
+- AI insights
+
+--------------------------------------------------------------------
+PROJECT MANAGER DASHBOARD
+--------------------------------------------------------------------
+
+May display:
+
+- Managed projects
+- Active projects
+- Project progress
+- Overdue tasks
+- Upcoming deadlines
+- Team workload
+- Task distribution
+- Project health
+- AI recommendations
+- Risks
+
+--------------------------------------------------------------------
+TEAM LEADER DASHBOARD
+--------------------------------------------------------------------
+
+May display:
+
+- Team members
+- Team workload
+- Team tasks
+- Team projects
+- Overdue tasks
+- Team performance
+- Upcoming deadlines
+- AI workload recommendations
+
+--------------------------------------------------------------------
+EMPLOYEE DASHBOARD
+--------------------------------------------------------------------
+
+May display:
+
+- Assigned projects
+- Assigned tasks
+- Tasks in progress
+- Tasks due soon
+- Overdue tasks
+- Completed tasks
+- Personal workload
+- Leave information
+- Personal performance
+- Recognition
+- Relevant AI insights
+
+====================================================================
+29. PERFORMANCE AND RECOGNITION
+====================================================================
+
+DevOrbia should provide professional performance and recognition
+intelligence.
+
+Recognition examples:
+
+- Best Employee
+- Best Team
+- Best Team Leader
+- Most Improved Employee
+- Most Improved Team
+- Best Project
+- Best On-Time Performance
+- Outstanding Contribution
+
+Performance must NOT be based only on the number of tasks completed.
+
+Possible metrics:
+
+- Completion rate
+- On-time completion
+- Task complexity
+- Estimated effort
+- Quality indicators
+- Reopened work
+- Consistency
+- Contribution
+- Project contribution
+- Improvement over time
+
+Important fairness rule:
+
+Approved leave must NOT directly reduce an employee's performance
+score.
+
+The goal is motivation and fair recognition, not unhealthy competition.
+
+====================================================================
+30. AI FEATURES — FINALIZED
+====================================================================
+
+DevOrbia has FIVE official AI pillars.
+
+1. AI Resource Assignment
+2. AI Project Risk & Health Detection
+3. AI Workload Balancing
+4. Leave Impact Analysis + Smart Reassignment
+5. Performance & Recognition Intelligence
+
+These are the finalized flagship AI features.
+
+Do not add unnecessary AI features simply to increase the feature
+count.
+
+====================================================================
+31. AI RESOURCE ASSIGNMENT
+====================================================================
+
+AI recommends suitable resources for:
+
+- Project -> Department
+- Project -> Team
+- Project -> Employee/member
+- Task -> Team
+- Task -> Employee
+
+Factors may include:
+
+- Skills
+- Technology expertise
+- Experience
+- Project familiarity
+- Current workload
+- Available capacity
+- Task complexity
+- Project complexity
+- Deadlines
+- Leave/availability
+- Existing commitments
+- Dependencies
+- Historical performance
+
+Example:
+
+Task:
+Payment Gateway Integration
+
+Recommendations:
+
+1. Kumar - 94%
+2. Arun - 87%
+3. Priya - 81%
+
+AI must explain its recommendation.
+
+Example:
+
+Kumar is recommended because:
+
+- Required API skills
+- Sufficient capacity
+- Already familiar with the project
+- No leave conflict
+- Relevant previous experience
+
+Important:
+
+AI RECOMMENDS.
+
+AUTHORIZED HUMAN DECIDES.
+
+AI must never automatically make sensitive assignments without
+authorized confirmation.
+
+====================================================================
+32. AI RESOURCE MATCH SCORING
+====================================================================
+
+Possible scoring model:
+
+Skill Match              30%
+Availability             20%
+Workload                 20%
+Experience               15%
+Project Familiarity      10%
+Deadline Fit              5%
+
+These percentages are starting architectural guidance.
+
+They may be adjusted after testing.
+
+AI should provide:
+
+- Match score
+- Ranking
+- Reason
+- Strengths
+- Potential conflicts
+- Relevant factors
+
+====================================================================
+33. AI PROJECT RISK AND HEALTH DETECTION
+====================================================================
+
+DevOrbia continuously analyzes project health.
+
+Possible factors:
+
+- Project progress
+- Task completion
+- Overdue tasks
+- Blocked tasks
+- Dependencies
+- Deadline distance
+- Team workload
+- Employee availability
+- Leave
+- Team capacity
+- Critical tasks
+- Project priority
+
+Project health levels:
+
+GREEN:
+Healthy
+
+YELLOW:
+Needs Attention
+
+RED:
+High Risk
+
+Example:
+
+PROJECT HEALTH
+72 / 100
+
+STATUS:
+NEEDS ATTENTION
+
+Reason:
+
+- 3 high-priority tasks overdue
+- 2 blocked tasks
+- Backend capacity 91%
+- Deadline approaching
+
+AI should explain the detected risk.
+
+====================================================================
+34. AI WORKLOAD BALANCING
+====================================================================
+
+DevOrbia analyzes workload across:
+
+- Employees
+- Teams
+- Projects
+
+Example:
+
+Backend Team:
+
+Arun     95%
+Kumar    60%
+Priya    40%
+
+AI may identify:
+
+Arun is overloaded.
+
+Kumar has available capacity.
+
+Suggested action:
+
+Move an appropriate task from Arun to Kumar.
+
+Important:
+
+AI recommends.
+
+Manager confirms.
+
+AI must not silently reassign tasks.
+
+====================================================================
+35. AI LEAVE IMPACT + SMART REASSIGNMENT
+====================================================================
+
+When leave is requested or approved, DevOrbia analyzes:
+
+- Affected tasks
+- Task deadlines
+- Project deadlines
+- Task priority
+- Dependencies
+- Employee workload
+- Team capacity
+- Other employees' availability
+- Skills
+- Project familiarity
+
+Example:
+
+Employee unavailable.
+
+AI recommendations:
+
+1. Kumar - 93%
+2. Priya - 86%
+3. Arun - 74%
+
+The recommendation considers:
+
+- Skill match
+- Capacity
+- Availability
+- Project familiarity
+- Deadline
+- Task complexity
+- Existing workload
+
+Manager confirms reassignment.
+
+====================================================================
+36. AI PERFORMANCE AND RECOGNITION INTELLIGENCE
+====================================================================
+
+AI may analyze:
+
+- Completion
+- On-time delivery
+- Task complexity
+- Contribution
+- Consistency
+- Improvement
+- Project contribution
+- Quality indicators
+
+It can identify:
+
+- Best employee
+- Best team
+- Best Team Leader
+- Most improved
+- Outstanding contribution
+- Strong project performance
+
+Performance must be fair and explainable.
+
+Approved leave must not directly punish performance.
+
+Avoid ranking people solely by task count.
+
+====================================================================
+37. AI EXPLAINABILITY
+====================================================================
+
+Whenever AI makes a recommendation, DevOrbia should explain WHY.
+
+Example:
+
+RECOMMENDED EMPLOYEE:
+Kumar
+
+MATCH:
+94%
+
+Reasons:
+
+- Required skills: Excellent
+- Current workload: 42%
+- Project familiarity: High
+- Deadline availability: Good
+- Similar experience: Strong
+
+This improves:
+
+- Trust
+- Transparency
+- Human decision-making
+- Debuggability
+- User confidence
+
+====================================================================
+38. AI SECURITY
+====================================================================
+
+AI must NEVER bypass:
+
+- Authentication
+- RBAC
+- Tenant isolation
+- Resource permissions
+- Organization boundaries
+
+AI data pipeline:
+
+Authentication
+    ↓
+Organization
+    ↓
+RBAC
+    ↓
+Resource Permissions
+    ↓
+Eligible Data
+    ↓
+AI Analysis
+    ↓
+Recommendation
+
+AI must never query unrestricted organizational data.
+
+Example:
+
+Organization A user must never receive an AI recommendation based on
+Organization B employees.
+
+====================================================================
+39. AI ARCHITECTURE
+====================================================================
+
+AI should be implemented as an intelligence layer.
+
+DevOrbia
+    ↓
+AI Service Layer
+    ↓
+AI Provider Interface
+    ↓
++-----------------------------+
+| Rule/Scoring Engine         |
+| Local/Free AI               |
+| Future AI Provider          |
++-----------------------------+
+
+Do not tightly couple DevOrbia to one commercial AI provider.
+
+The application should be able to operate using:
+
+- Deterministic scoring
+- Business rules
+- Local/free AI
+- Optional future AI providers
+
+This supports the ₹0 development requirement.
+
+====================================================================
+40. AI DOES NOT MEAN EVERYTHING USES AN LLM
+====================================================================
+
+Critical business calculations should not depend entirely on an LLM.
+
+Example:
+
+Resource assignment can use:
+
+Skills
++
+Availability
++
+Workload
++
+Experience
++
+Deadline
++
+Project familiarity
+
+to produce a deterministic score.
+
+AI can then explain the recommendation.
+
+Similarly:
+
+Project risk can be calculated from:
+
+- Overdue tasks
+- Blocked tasks
+- Progress
+- Deadline
+- Workload
+- Dependencies
+
+AI can explain why the project is considered risky.
+
+This approach is:
+
+- Cheaper
+- More predictable
+- More testable
+- More reliable
+- Better suited to a ₹0 architecture
+
+====================================================================
+41. SEARCH, FILTERING, SORTING AND PAGINATION
+====================================================================
+
+Large collections should support:
+
+- Search
+- Filtering
+- Sorting
+- Pagination
+
+Employees:
+
+Search:
+- Name
+- Email
+- Job title
+
+Filters:
+- Department
+- Team
+- Role
+- Status
+
+Projects:
+
+Search:
+- Project name
+- Project code
+
+Filters:
+- Status
+- Priority
+- Manager
+- Team
+
+Tasks:
+
+Search:
+- Title
+
+Filters:
+- Status
+- Priority
+- Assignee
+- Team
+- Project
+
+All collection APIs should use bounded pagination.
+
+Never allow unlimited database retrieval.
+
+====================================================================
+42. ANALYTICS
+====================================================================
+
+Analytics should use actual database data.
+
+Possible analytics:
+
+- Project completion rate
+- Tasks by status
+- Tasks by priority
+- Overdue tasks
+- Team workload
+- Employee workload
+- Project workload
+- Completed tasks over time
+- Upcoming deadlines
+- Active vs completed projects
+- Work distribution
+- Performance trends
+
+Charts should be used only when visualization improves understanding.
+
+Avoid decorative analytics.
+
+====================================================================
+43. PROJECT HEALTH
+====================================================================
+
+Each project can have a dynamic health score.
+
+Example:
+
+PROJECT HEALTH
+
+82 / 100
+
+Progress       90%
+Task Health    84%
+Workload       80%
+Deadline       75%
+Dependencies   78%
+
+Overall:
+HEALTHY
+
+Possible health levels:
+
+GREEN:
+Healthy
+
+YELLOW:
+Needs Attention
+
+RED:
+High Risk
+
+Health should be calculated from actual system data.
+
+====================================================================
+44. ACTIVITY AND NOTIFICATION FOUNDATION
+====================================================================
+
+Future activity records may include:
+
+- Project creation
+- Task creation
+- Task assignment
+- Task reassignment
+- Task status change
+- Team membership changes
+- Leave events
+- Administrative actions
+- AI recommendations
+
+Notifications may include:
+
+- Task assigned
+- Task overdue
+- Deadline approaching
+- Leave result
+- Project update
+- Risk warning
+- Workload warning
+
+====================================================================
+45. UI/UX PRODUCT IDENTITY
+====================================================================
+
+DevOrbia should look like a genuine professional B2B SaaS product.
+
+Visual identity:
+
+- Professional
+- Clean
+- Modern
+- Developer-oriented
+- Business-oriented
+- Information-dense
+- Responsive
+- Accessible
+
+The application should NOT look like:
+
+- A college CRUD application
+- A generic admin template
+- A flashy AI wrapper
+- An IDE
+- A coding platform
+
+Design inspiration can come from modern professional products, but
+DevOrbia must have its own identity.
+
+====================================================================
+46. UI DESIGN PHILOSOPHY
+====================================================================
+
+Priority:
+
+Information hierarchy > decoration
+
+Use:
+
+- Clean layouts
+- Whitespace
+- Clear typography
+- Subtle borders
+- Moderate border radius
+- Consistent spacing
+- Clear status indicators
+- Minimal useful animation
+
+Avoid:
+
+- Excessive gradients
+- Excessive glassmorphism
+- Neon UI
+- Glowing borders
+- Excessive shadows
+- Excessive animations
+- Decorative charts
+- Random colors
+- Template-like design
+
+====================================================================
+47. APPLICATION LAYOUT
+====================================================================
+
+Primary desktop structure:
+
+Sidebar
+    +
+Header
+    +
+Main Workspace
+
+Header may contain:
+
+- Search
+- Notifications
+- User profile
+- Organization context
+
+Sidebar contains role-aware navigation.
+
+Main workspace contains:
+
+- Page title
+- Breadcrumbs where useful
+- Filters
+- Content
+- Analytics
+- AI insights
+- Actions
+
+====================================================================
+48. ROLE-AWARE NAVIGATION
+====================================================================
+
+Organization Admin:
+
+- Dashboard
+- Organization
+- Employees
+- Departments
+- Teams
+- Projects
+- Tasks
+- Leave
+- Analytics
+- Notifications
+- Settings
+
+Project Manager:
+
+- Dashboard
+- Projects
+- My Tasks
+- Team
+- Leave
+- Analytics
+- Notifications
+
+Team Leader:
+
+- Dashboard
+- My Team
+- Projects
+- Tasks
+- Leave
+- Performance
+- Notifications
+
+Employee:
+
+- Dashboard
+- My Projects
+- My Tasks
+- My Team
+- Leave
+- My Performance
+- Notifications
+
+Navigation must respect permissions.
+
+====================================================================
+49. UI COLOR SYSTEM
+====================================================================
+
+Use a restrained professional palette.
+
+Primary:
+Professional blue/indigo family.
+
+Semantic:
+
+Green:
+Success / Done / Healthy
+
+Amber:
+Warning / Needs Attention
+
+Red:
+Critical / Overdue / High Risk
+
+Blue:
+Information / In Progress
+
+Gray:
+Neutral / Backlog
+
+Colors should communicate meaning.
+
+Do not use color only for decoration.
+
+====================================================================
+50. TYPOGRAPHY
+====================================================================
+
+Recommended font:
+
+Inter or another professional sans-serif.
+
+Suggested hierarchy:
+
+Page title:
+28-32px
+
+Section heading:
+18-22px
+
+Body:
+14-16px
+
+Table:
+13-14px
+
+Metadata:
+12-13px
+
+Typography must prioritize readability.
+
+====================================================================
+51. DASHBOARD DESIGN
+====================================================================
+
+Dashboard should be information-dense but clean.
+
+Typical structure:
+
+Greeting / Context
+
+↓
+Key Metrics
+
+↓
+Project Health
+
+↓
+Workload
+
+↓
+Deadlines
+
+↓
+AI Insights
+
+↓
+Recognition / Performance
+
+AI insights should be decision-support cards rather than a generic
+chatbot interface.
+
+====================================================================
+52. AI UI DESIGN
+====================================================================
+
+Avoid:
+
+"Ask AI Anything"
+
+as the primary AI interface.
+
+Instead, AI should appear contextually.
+
+Example:
+
+ASSIGN TASK
+
+Payment Gateway Integration
+
+AI RECOMMENDATIONS:
+
+1. Kumar - 94%
+2. Arun - 87%
+3. Priya - 81%
+
+WHY?
+
+- Required skills
+- Capacity
+- Experience
+- Project familiarity
+- Deadline fit
+
+Actions:
+
+[Assign Kumar]
+
+The user remains in control.
+
+====================================================================
+53. PROJECT RISK UI
+====================================================================
+
+Example:
+
+PROJECT HEALTH
+
+72 / 100
+
+NEEDS ATTENTION
+
+Progress: 68%
+Task Health: 74%
+Workload: 81%
+Deadline: 63%
+
+AI RISK ANALYSIS
+
+- 3 high-priority tasks overdue
+- 2 tasks blocking downstream work
+- Backend capacity 91%
+
+Actions:
+
+[View affected tasks]
+
+====================================================================
+54. TABLE DESIGN
+====================================================================
+
+Tables should support:
+
+- Search
+- Filters
+- Sorting
+- Pagination
+- Row actions
+- Status badges
+- Avatars
+- Empty states
+
+Avoid overcrowding.
+
+====================================================================
+55. KANBAN UI
+====================================================================
+
+Kanban columns:
+
+BACKLOG
+TO DO
+IN PROGRESS
+REVIEW
+DONE
+
+Cards:
+
+- Task title
+- Priority
+- Assignee
+- Due date
+- Tags
+
+Drag-and-drop may be implemented.
+
+Backend must validate resulting state.
+
+====================================================================
+56. LEAVE UI
+====================================================================
+
+Employee leave page should show:
+
+- Leave balance if applicable
+- Upcoming leave
+- Leave history
+- Request status
+- Impact analysis
+
+Example:
+
+LEAVE REQUEST
+
+September 10 - September 12
+
+IMPACT ANALYSIS
+
+2 active tasks affected
+1 deadline conflict
+
+AI RECOMMENDATION:
+
+Consider reassignment of Task #142.
+
+====================================================================
+57. RECOGNITION UI
+====================================================================
+
+Recognition should be professional.
+
+Avoid childish gaming-style leaderboards.
+
+Example:
+
+TEAM PERFORMANCE
+
+Frontend Team
+
+Delivery: 92%
+Consistency: 88%
+Quality: 91%
+Improvement: +12%
+
+Recognition:
+
+Top performing team this period.
+
+====================================================================
+58. RESPONSIVE DESIGN
+====================================================================
+
+The application should support:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+Desktop is the primary experience.
+
+On mobile:
+
+- Sidebar becomes drawer
+- Cards become responsive
+- Tables become responsive/scrollable
+- Controls remain accessible
+- Important information remains visible
+
+====================================================================
+59. ANIMATION
+====================================================================
+
+Use animation only when useful.
+
+Allowed:
+
+- Modal transitions
+- Sidebar transitions
+- Toasts
+- Loading skeletons
+- Progress transitions
+- Drag/drop feedback
+
+Avoid:
+
+- Animated backgrounds
+- Constant floating effects
+- Excessive transitions
+- Parallax
+- Glowing effects
+
+====================================================================
+60. DESIGN SYSTEM
+====================================================================
+
+Reusable components should include:
+
+- Button
+- Input
+- Select
+- Textarea
+- Badge
+- Avatar
+- Card
+- Table
+- Modal
+- Dialog
+- Dropdown
+- Tabs
+- Tooltip
+- Toast
+- Alert
+- Skeleton
+- Pagination
+- Breadcrumb
+- Progress
+- EmptyState
+- ErrorState
+- ConfirmationDialog
+
+All modules should reuse the same design system.
+
+====================================================================
+61. FRONTEND TECHNOLOGY STACK
+====================================================================
+
+React
+Vite
+JavaScript
+Tailwind CSS v4
+React Router
+Zustand
+Axios
+Lucide React
+Recharts
+
+Frontend architecture:
+
+src/
+├── api/
+├── assets/
+├── components/
+├── constants/
+├── features/
+├── hooks/
+├── layouts/
+├── pages/
+├── routes/
+├── stores/
+├── utils/
+├── App.jsx
+└── main.jsx
+
+Feature-specific code should remain logically grouped.
+
+Avoid giant components.
+
+Avoid unnecessary duplication.
+
+====================================================================
+62. BACKEND TECHNOLOGY STACK
+====================================================================
+
+Node.js
+Express.js
+JavaScript
+MongoDB
+Mongoose
+Zod
+
+Backend architecture:
+
+Routes
+    ↓
+Middleware
+    ↓
+Controllers
+    ↓
+Services
+    ↓
+Repositories
+    ↓
+Models
+    ↓
+MongoDB
+
+Controllers must remain thin.
+
+Business logic belongs primarily in services.
+
+Database access belongs primarily in repositories.
+
+====================================================================
+63. REST API ARCHITECTURE
+====================================================================
+
+Base:
+
+/api/v1
+
+Main modules:
+
+/api/v1/auth
+/api/v1/organizations
+/api/v1/employees
+/api/v1/departments
+/api/v1/teams
+/api/v1/projects
+/api/v1/tasks
+/api/v1/leave
+/api/v1/dashboard
+/api/v1/analytics
+/api/v1/notifications
+
+Use:
+
+GET
+POST
+PATCH
+PUT where appropriate
+DELETE where appropriate
+
+Status codes:
+
+200
+201
+204
+400
+401
+403
+404
+409
+422 where appropriate
+500
+
+Responses and errors should use consistent formats.
+
+====================================================================
+64. DATABASE DESIGN
+====================================================================
+
+Core collections:
+
+users
+organizations
+employees
+departments
+teams
+projects
+tasks
+sessions
+passwordResetTokens
+leaveRequests
+notifications
+
+Potential future collections:
+
+activities
+auditEvents
+comments
+sprints
+milestones
+taskDependencies
+
+Organization-owned documents should contain organization reference.
+
+Indexes should be based on actual query patterns.
+
+====================================================================
+65. INPUT VALIDATION
+====================================================================
+
+Use Zod for backend validation.
+
+Validate:
+
+- Request bodies
+- URL parameters
+- Query parameters
+- IDs
+- Emails
+- Passwords
+- Roles
+- Status values
+- Priority values
+- Pagination
+- Dates
+- Search values
+- Filter values
+
+Frontend validation improves UX.
+
+Backend validation is mandatory.
+
+====================================================================
+66. SECURITY ARCHITECTURE
+====================================================================
+
+Security priorities:
+
+- Authentication
+- Authorization
+- Tenant isolation
+- IDOR prevention
+- Input validation
+- Secure cookies
+- Secure CORS
+- Security headers
+- Rate limiting
+- Request-size limits
+- Error handling
+- Environment variables
+- Production-safe errors
+- Bounded queries
+
+Protect against:
+
+- Unauthorized access
+- Broken authentication
+- Broken authorization
+- Cross-tenant access
+- IDOR
+- Malicious input
+- Excessive data exposure
+- Unsafe cookies
+- Improper CORS
+- Unbounded database queries
+- Sensitive error leakage
+
+====================================================================
+67. ERROR HANDLING
+====================================================================
+
+Centralized error handling.
+
+Possible error classes:
+
+ValidationError
+AuthenticationError
+AuthorizationError
+NotFoundError
+ConflictError
+BusinessRuleError
+DatabaseError
+InternalServerError
+
+Users should receive understandable messages.
+
+Production must not expose:
+
+- Stack traces
+- Internal file paths
+- Database errors
+- Secrets
+- Sensitive implementation details
+
+====================================================================
+68. TESTING STRATEGY
+====================================================================
+
+Testing is mandatory.
+
+Test:
+
+- Authentication
+- Authorization
+- Tenant isolation
+- IDOR prevention
+- Organizations
+- Employees
+- Departments
+- Teams
+- Projects
+- Tasks
+- Workflow
+- Leave
+- AI permissions
+- AI recommendation boundaries
+- Validation
+- Error handling
+- Repository behavior
+- API integration
+
+Critical test:
+
+User belongs to Organization A.
+
+Project belongs to Organization B.
+
+User manually submits Organization B project ID.
+
+Expected:
+
+Access denied or resource not found.
+
+Organization B data must NEVER be returned.
+
+====================================================================
+69. AI TESTING
+====================================================================
+
+AI-related testing should verify:
+
+- AI only receives authorized data
+- AI cannot cross organization boundaries
+- AI respects user permissions
+- Recommendations use valid data
+- Invalid employee candidates are excluded
+- Unavailable employees are handled correctly
+- Leave conflicts are detected
+- Workload is calculated correctly
+- Risk scores are reproducible where deterministic
+- AI explanations correspond to actual factors
+- AI cannot directly perform unauthorized mutations
+
+====================================================================
+70. DEVELOPMENT COST REQUIREMENT
+====================================================================
+
+Primary project constraint:
+
+TARGET DEVELOPMENT COST:
+₹0
+
+Use free/open-source technologies and free-tier infrastructure where
+possible.
+
+Development tools:
+
+- Antigravity free/individual plan
+- Git
+- GitHub
+- React
+- Node.js
+- Express
+- MongoDB
+- Mongoose
+- Tailwind CSS
+- Zustand
+- Axios
+- Zod
+- Open-source libraries
+
+Database:
+
+MongoDB Atlas Free or local MongoDB.
+
+Deployment:
+
+Use free-tier hosting where available.
+
+Important:
+
+Free-tier limits can change.
+
+The architecture must not depend on expensive infrastructure.
+
+====================================================================
+71. FREE AI STRATEGY
+====================================================================
+
+Do NOT make every AI feature dependent on a paid LLM API.
+
+Use:
+
+- Deterministic scoring
+- Business rules
+- Statistical calculations
+- Local/free AI where useful
+- Optional AI provider abstraction
+
+AI should be used where it provides actual value.
+
+The project should remain functional even if an external AI provider
+is unavailable.
+
+====================================================================
+72. EMAIL COST STRATEGY
+====================================================================
+
+Email functionality should be implemented through an abstraction.
+
+Use free SMTP/free-tier transactional email where practical.
+
+Do not assume unlimited free email.
+
+The architecture should allow switching providers later.
+
+====================================================================
+73. DEPLOYMENT TARGET
+====================================================================
+
+Initial target:
+
+Frontend:
+Free-tier hosting
+
+Backend:
+Free-tier hosting
+
+Database:
+MongoDB Atlas Free
+
+Source control:
+GitHub Free
+
+Development:
+Antigravity + local environment
+
+The exact deployment provider should be selected based on available
+free tiers when deployment begins.
+
+====================================================================
+74. WHAT DEVORBIA IS NOT
+====================================================================
+
+DevOrbia is NOT:
+
+- IDE
+- Code editor
+- Compiler
+- Code execution environment
+- Git replacement
+- GitHub replacement
+- Full document editor
+- Full communication platform
+- Generic chatbot
+- Social network
+- Coding practice platform
+- Online programming judge
+- Jira clone
+
+DevOrbia is a software-development MANAGEMENT platform.
+
+====================================================================
+75. WHAT MAKES DEVORBIA DIFFERENT
+====================================================================
+
+Traditional project management often focuses on:
+
+"What work needs to be done?"
+
+DevOrbia focuses on:
+
+- What work needs to be done?
+- Who is best suited to do it?
+- Can they realistically handle it?
+- What impact will leave have?
+- Is the project likely to be delayed?
+- Where is workload unbalanced?
+- Which tasks should be reconsidered?
+- Which teams/employees are performing strongly?
+- What should management pay attention to?
+
+The differentiating factor is the connection between:
+
+PEOPLE
++
+ORGANIZATION
++
+PROJECTS
++
+TASKS
++
+WORKLOAD
++
+LEAVE
++
+DEADLINES
++
+PERFORMANCE
++
+AI
+
+====================================================================
+76. FIVE FLAGSHIP AI FEATURES
+====================================================================
+
+1. AI RESOURCE ASSIGNMENT
+
+Recommends best department/team/employee for work.
+
+2. AI PROJECT RISK & HEALTH DETECTION
+
+Detects project health and potential delays.
+
+3. AI WORKLOAD BALANCING
+
+Detects overloaded/underutilized employees and teams.
+
+4. LEAVE IMPACT ANALYSIS + SMART REASSIGNMENT
+
+Analyzes leave impact and recommends replacements.
+
+5. PERFORMANCE & RECOGNITION INTELLIGENCE
+
+Identifies meaningful performance and recognition.
+
+These five features are the finalized flagship AI features.
+
+====================================================================
+77. FUTURE SCOPE
+====================================================================
+
+Future features may include:
+
+- Real-time notifications
+- Activity feeds
+- Comments
+- Mentions
+- File attachments
+- Sprint management
+- Milestones
+- Task dependencies
+- Custom workflows
+- Audit logs
+- Advanced reports
+- Report export
+- Email notifications
+- GitHub integration
+- Git repository integration
+- Pull request tracking
+- Issue tracker integration
+- Calendar integration
+- WebSocket updates
+- Advanced AI assistant
+- AI project-risk detection improvements
+- AI workload optimization improvements
+- AI-generated reports
+- Natural-language analytics
+
+These should NOT be added prematurely.
+
+====================================================================
+78. DEVELOPMENT ROADMAP
+====================================================================
+
+DevOrbia must be developed incrementally.
+
+DO NOT build the entire project at once.
+
+--------------------------------------------------------------------
+PHASE 0 — PROJECT FOUNDATION
+--------------------------------------------------------------------
+
+Create:
+
+- MERN workspace
+- Frontend
+- Backend
+- Folder architecture
+- Environment configuration
+- ESLint
+- Formatting
+- Health API
+- Basic test setup
+- Base UI shell
+- Documentation
+
+No major business functionality.
+
+--------------------------------------------------------------------
+PHASE 1A — AUTHENTICATION FOUNDATION
+--------------------------------------------------------------------
+
+Create:
+
+- User model
+- Password hashing
+- Authentication architecture
+- Session architecture
+- Cookie handling
+- Authentication utilities
+- Auth middleware
+- Security foundation
+
+--------------------------------------------------------------------
+PHASE 1B — AUTHENTICATION APIs
+--------------------------------------------------------------------
+
+Implement:
+
+- Login
+- Logout
+- Refresh authentication
+- Forgot password
+- Reset password
+- Current-user API
+- Request validation
+- Auth tests
+
+--------------------------------------------------------------------
+PHASE 1C — AUTHENTICATION FRONTEND + RBAC
+--------------------------------------------------------------------
+
+Build:
+
+- Login
+- Forgot password
+- Reset password
+- Invitation/account activation
+- Zustand auth store
+- Session initialization
+- Protected routes
+- Role-aware routes
+- Role-aware navigation
+- Unauthorized screens
+
+--------------------------------------------------------------------
+PHASE 2A — ORGANIZATIONS + MULTI-TENANCY + EMPLOYEES
+--------------------------------------------------------------------
+
+Implement:
+
+- Organization model
+- Employee model
+- Organization-scoped repositories
+- Tenant isolation
+- Employee APIs
+- Employee UI
+- Search
+- Filtering
+- Pagination
+- Organization dashboard foundation
+
+Tenant isolation must be heavily tested.
+
+--------------------------------------------------------------------
+PHASE 2B — DEPARTMENTS + TEAMS
+--------------------------------------------------------------------
+
+Implement:
+
+- Departments
+- Department members
+- Teams
+- Team leaders
+- Team members
+- Organizational hierarchy
+- Permissions
+- Department UI
+- Team UI
+
+--------------------------------------------------------------------
+PHASE 2C — PROJECT MANAGEMENT
+--------------------------------------------------------------------
+
+Implement:
+
+- Projects
+- Project managers
+- Assigned teams
+- Project members
+- Deadlines
+- Project status
+- Priority
+- Search
+- Filtering
+- Project detail pages
+- Project permissions
+
+--------------------------------------------------------------------
+PHASE 2D — TASKS + WORKFLOWS
+--------------------------------------------------------------------
+
+Implement:
+
+- Tasks
+- Assignment
+- Reassignment
+- Priority
+- Workflow status
+- Due dates
+- Estimated effort
+- Task lists
+- Personal tasks
+- Project tasks
+- Team tasks
+- Kanban board
+- Workflow validation
+- Project progress calculation
+- Overdue state
+- Blocked state
+
+--------------------------------------------------------------------
+PHASE 2E — LEAVE MANAGEMENT
+--------------------------------------------------------------------
+
+Implement:
+
+- Leave model
+- Leave requests
+- Leave status
+- Leave approval
+- Leave history
+- Permission rules
+- Leave UI
+- Leave notifications
+- Basic leave impact detection
+
+--------------------------------------------------------------------
+PHASE 3 — DASHBOARDS + ANALYTICS
+--------------------------------------------------------------------
+
+Implement role-aware dashboards.
+
+Use actual database information.
+
+Implement:
+
+- Project health
+- Workload
+- Task analytics
+- Employee analytics
+- Team analytics
+- Deadline analytics
+- Recognition data
+
+--------------------------------------------------------------------
+PHASE 4 — AI FEATURES
+--------------------------------------------------------------------
+
+Introduce AI gradually.
+
+4A:
+AI Resource Assignment
+
+4B:
+AI Project Risk & Health
+
+4C:
+AI Workload Balancing
+
+4D:
+Leave Impact + Smart Reassignment
+
+4E:
+Performance & Recognition Intelligence
+
+Every AI feature must:
+
+- Respect authorization
+- Respect tenant isolation
+- Explain recommendations
+- Be testable
+- Avoid unauthorized automatic mutations
+
+--------------------------------------------------------------------
+PHASE 5 — EMAIL + NOTIFICATION SYSTEM
+--------------------------------------------------------------------
+
+Implement:
+
+- Notification service
+- Email service
+- In-app notifications
+- Task notifications
+- Leave notifications
+- Deadline notifications
+- Risk notifications
+- Workload warnings
+
+--------------------------------------------------------------------
+PHASE 6 — SECURITY + UX + QUALITY HARDENING
+--------------------------------------------------------------------
+
+Review:
+
+- Authentication
+- Authorization
+- RBAC
+- Tenant isolation
+- IDOR
+- Validation
+- Errors
+- Pagination
+- Accessibility
+- Responsiveness
+- Performance
+- Testing
+- UI consistency
+- Security configuration
+
+--------------------------------------------------------------------
+PHASE 7 — DEPLOYMENT + DOCUMENTATION
+--------------------------------------------------------------------
+
+Prepare:
+
+- Production environment
+- Frontend deployment
+- Backend deployment
+- MongoDB Atlas
+- Environment variables
+- Production configuration
+- README
+- API documentation
+- Architecture documentation
+- Demo data strategy
+- Final testing
+
+====================================================================
+79. DEVELOPMENT WORKFLOW WITH ANTIGRAVITY
+====================================================================
+
+Antigravity should NOT be asked to generate the complete DevOrbia
+application in one prompt.
+
+Development should be phase-by-phase.
+
+For each phase:
+
+1. Understand current project state.
+2. Inspect existing files.
+3. Understand existing architecture.
+4. Explain the goal.
+5. Identify files/modules involved.
+6. Implement only the required phase.
+7. Reuse existing architecture.
+8. Avoid unnecessary rewrites.
+9. Run tests/build.
+10. Fix errors.
+11. Provide exact commands.
+12. Provide test instructions.
+13. Verify expected results.
+14. Only then move to the next phase.
+
+If an existing DevOrbia project is uploaded:
+
+DO NOT GUESS FILE CONTENT.
+
+Inspect the actual files first.
+
+Do not regenerate working modules unnecessarily.
+
+Maintain backward compatibility.
+
+====================================================================
+80. DEVELOPMENT PRINCIPLES
+====================================================================
+
+Always prioritize:
+
+- Security
+- Correctness
+- Maintainability
+- Usability
+- Testability
+- Modularity
+- Clear architecture
+- Professional UI/UX
+
+Do NOT:
+
+- Build everything at once
+- Add unnecessary complexity
+- Randomly change technologies
+- Depend on frontend security
+- Hardcode organization IDs
+- Skip validation
+- Skip error handling
+- Use fake dashboard statistics
+- Leave nonfunctional buttons
+- Create placeholder modules and call them complete
+- Add AI before core systems are stable
+- Put all logic inside controllers
+- Put business logic inside React components
+- Create huge files unnecessarily
+- Duplicate logic
+- Over-engineer
+- Introduce microservices unnecessarily
+
+====================================================================
+81. AI DEVELOPMENT PRINCIPLES
+====================================================================
+
+AI should:
+
+- Assist decisions
+- Not blindly make decisions
+- Explain recommendations
+- Use authorized data
+- Respect organization boundaries
+- Respect RBAC
+- Be testable
+- Be replaceable
+- Be cost-conscious
+
+AI should NOT:
+
+- Bypass security
+- Access unauthorized data
+- Automatically reassign critical work without confirmation
+- Automatically reject leave solely because of project impact
+- Penalize approved leave
+- Make unexplained performance rankings
+- Become the entire application's identity
+
+====================================================================
+82. DATA AND BUSINESS RULE PRINCIPLES
+====================================================================
+
+Never use fake production-like statistics once real modules exist.
+
+Dashboards must query actual data.
+
+Never hardcode:
+
+- Organization IDs
+- User IDs
+- Project IDs
+- Team IDs
+- Statistics
+- AI results
+
+Use database relationships.
+
+Use organization-aware queries.
+
+Validate relationships before writes.
+
+====================================================================
+83. EXPECTED FINAL PRODUCT
+====================================================================
+
+The final DevOrbia application should allow an organization to:
+
+- Structure its organization
+- Manage employees
+- Manage departments
+- Manage teams
+- Create projects
+- Assign project managers
+- Assign teams
+- Assign project members
+- Create development tasks
+- Assign responsibilities
+- Track task progress
+- Manage workflows
+- Monitor deadlines
+- Manage leave
+- Analyze leave impact
+- Monitor workloads
+- Detect project risks
+- View project health
+- View dashboards
+- View analytics
+- Recognize performance
+- Receive notifications
+- Receive AI recommendations
+- Reassign work intelligently
+- Maintain secure tenant boundaries
+
+====================================================================
+84. EXPECTED PROFESSIONAL QUALITY
+====================================================================
+
+DevOrbia should be strong enough for:
+
+- Final-year project review
+- Technical viva
+- Portfolio
+- GitHub
+- Internship interviews
+- MERN developer interviews
+- Full-stack developer interviews
+- Project demonstrations
+
+It should demonstrate:
+
+- MERN development
+- React architecture
+- Node/Express backend
+- MongoDB design
+- REST API design
+- Authentication
+- Authorization
+- RBAC
+- Multi-tenancy
+- Tenant isolation
+- Secure development
+- Project management
+- Workforce management
+- Leave management
+- Analytics
+- AI integration
+- Testing
+- Responsive UI
+- Modular architecture
+
+====================================================================
+85. FINAL PRODUCT STATEMENT
+====================================================================
+
+DevOrbia is a secure, multi-tenant, AI-powered software-development
+management platform that connects organizational structure,
+employees, teams, projects, tasks, workload, deadlines, leave and
+performance into one centralized workspace.
+
+Its primary purpose is not to help developers WRITE code.
+
+Its purpose is to help organizations:
+
+MANAGE DEVELOPMENT WORK.
+
+The five flagship intelligence capabilities are:
+
+1. AI Resource Assignment
+2. AI Project Risk & Health Detection
+3. AI Workload Balancing
+4. Leave Impact Analysis + Smart Reassignment
+5. Performance & Recognition Intelligence
+
+The core philosophy is:
+
+AI RECOMMENDS.
+AUTHORIZED HUMANS DECIDE.
+
+The core security philosophy is:
+
+AUTHENTICATION
+    ↓
+AUTHORIZATION
+    ↓
+TENANT ISOLATION
+    ↓
+RESOURCE ACCESS
+    ↓
+BUSINESS LOGIC
+
+The core product philosophy is:
+
+PEOPLE
++
+ORGANIZATION
++
+PROJECTS
++
+TASKS
++
+WORKLOAD
++
+LEAVE
++
+DEADLINES
++
+PERFORMANCE
++
+AI INTELLIGENCE
+
+====================================================================
+86. FINAL TECHNOLOGY SUMMARY
+====================================================================
+
+FRONTEND:
+
+React
+Vite
+JavaScript
+Tailwind CSS v4
+React Router
+Zustand
+Axios
+Lucide React
+Recharts
+
+BACKEND:
+
+Node.js
+Express.js
+JavaScript
+MongoDB
+Mongoose
+Zod
+
+TESTING:
+
+Vitest
+Supertest
+
+DEVELOPMENT:
+
+Antigravity
+Git
+GitHub
+npm
+Postman or equivalent API testing tool
+
+DATABASE:
+
+MongoDB Atlas Free
+OR
+Local MongoDB
+
+DEPLOYMENT TARGET:
+
+Free-tier hosting
+
+====================================================================
+87. FINAL NON-NEGOTIABLE RULES
+====================================================================
+
+RULE 1:
+DevOrbia is a management platform, not an IDE.
+
+RULE 2:
+There is exactly ONE Super Admin for the entire platform.
+
+RULE 3:
+There is exactly ONE Organization Admin per organization.
+
+RULE 4:
+Super Admin has no operational relationship with organization users.
+
+RULE 5:
+No public self-registration.
+
+RULE 6:
+Users receive accounts through controlled organization onboarding.
+
+RULE 7:
+Backend authorization is mandatory.
+
+RULE 8:
+Tenant isolation is mandatory.
+
+RULE 9:
+Frontend security is never sufficient.
+
+RULE 10:
+AI cannot bypass authorization.
+
+RULE 11:
+AI recommendations require human confirmation for important actions.
+
+RULE 12:
+Approved leave must not directly reduce performance.
+
+RULE 13:
+Project/task statistics must use real data.
+
+RULE 14:
+Do not add unnecessary AI features.
+
+RULE 15:
+Do not introduce unnecessary technologies.
+
+RULE 16:
+Do not over-engineer.
+
+RULE 17:
+Do not build all phases simultaneously.
+
+RULE 18:
+Every major phase must be tested before moving forward.
+
+RULE 19:
+Existing working code must not be unnecessarily regenerated.
+
+RULE 20:
+The project should target ₹0 development cost using free/open-source
+tools and free tiers where practical.
+
+====================================================================
+                         END OF SPECIFICATION
+====================================================================

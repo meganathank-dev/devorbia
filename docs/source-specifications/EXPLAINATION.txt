@@ -1,0 +1,632 @@
+# 🎤 DevOrbia – Project Explanation Script
+
+**Good morning sir/mam.**
+
+En project oda title **“DevOrbia – AI-Powered Software Development Management Platform.”**
+
+DevOrbia is basically a **software development organization management platform**.
+
+First, indha project **task doing website illa**. For example, IDE maari code write panna vendiyadhu illa, Microsoft apps maari documents create panna vendiyadhu illa. Idhu mainly **software company-la irukkura employees, teams, projects and tasks-ai manage panna use aagura management platform.**
+
+---
+
+## 🔹 Why I selected this project?
+
+Usually oru software company-la different activities-ku different tools use pannuvanga.
+
+For example, employee management-ku oru system, project management-ku another tool, task tracking-ku another tool, leave management-ku another tool nu irukkum.
+
+Idhunaala information different places-la split aagidum.
+
+For example, oru Project Manager-ku:
+
+* Endha project active-la irukku?
+* Endha employee endha project-la work panraanga?
+* Yaarukku workload adhigama irukku?
+* Endha task overdue?
+* Endha project risk-la irukku?
+* Oru employee leave edutha project-ku impact enna?
+
+Indha information ellame separate systems-la irundha proper decision edukka difficult.
+
+So, **DevOrbia oda main objective is to bring these software-development management activities into one centralized platform.**
+
+---
+
+# 🔹 How DevOrbia is Structured?
+
+DevOrbia-la organization structure is:
+
+**Organization → Department → Team → Project → Task**
+
+For example:
+
+Oru company DevOrbia-la organization create pannum.
+
+Andha organization-kulla:
+
+**Engineering Department**
+
+Adhula:
+
+**Frontend Team, Backend Team, QA Team**
+
+Andha teams different:
+
+**Projects**
+
+handle pannum.
+
+Andha projects-kulla multiple:
+
+**Tasks**
+
+irukkum.
+
+So complete organization structure system-la connected-a irukkum.
+
+---
+
+# 🔹 Multi-Tenant System
+
+Indha project-la important concept **Multi-Tenancy**.
+
+Suppose DevOrbia-la two companies irukku:
+
+**Company A**
+
+and
+
+**Company B**
+
+Company A employees, projects, teams, tasks etc. Company B users-ku access aaga koodadhu.
+
+Same way Company B information Company A users-ku access aaga koodadhu.
+
+Idhu frontend-la mattum restrict pannama, **backend and database query level-la enforce pannuvom.**
+
+For example, user manually another project's ID API request-la kuduthalum, backend organization verification pannitu access deny pannum.
+
+So **tenant isolation** is one of the major security features of DevOrbia.
+
+---
+
+# 🔹 User Roles
+
+DevOrbia-la different responsibilities-ku different roles irukkum.
+
+### 1. Super Admin
+
+Super Admin is the **DevOrbia platform-level administrator**.
+
+But Super Admin-ku organization employees, projects, tasks or leave requests-la direct relationship irukkadhu.
+
+Super Admin mainly:
+
+* Organization create pannuvanga
+* Organization access provide pannuvanga
+* Organization activate/deactivate pannuvanga
+* Platform-level statistics monitor pannuvanga
+
+For example, oru company DevOrbia use panna access venumna, Super Admin organization-ku platform access provide pannuvanga.
+
+**Super Admin organization-oda internal management-la interfere panna maattanga.**
+
+---
+
+### 2. Organization Admin
+
+Organization Admin is the highest-level administrator **inside that organization**.
+
+Avanga:
+
+* Employees manage pannalaam
+* Departments create pannalaam
+* Teams create pannalaam
+* Roles assign pannalaam
+* Organization settings manage pannalaam
+* Projects and organization-level information monitor pannalaam
+
+Each organization-ku **one Organization Admin** initially maintain pannuvom.
+
+---
+
+### 3. Project Manager
+
+Project Manager mainly projects-ku responsible.
+
+Avanga:
+
+* Projects create pannalaam
+* Teams assign pannalaam
+* Project members assign pannalaam
+* Tasks create pannalaam
+* Tasks employees-ku assign pannalaam
+* Deadlines set pannalaam
+* Priority set pannalaam
+* Project progress monitor pannalaam
+* Project risk monitor pannalaam
+
+---
+
+### 4. Team Leader
+
+Team Leader assigned team-ai manage pannuvanga.
+
+Avanga:
+
+* Team members monitor pannalaam
+* Tasks assign pannalaam
+* Task progress monitor pannalaam
+* Team workload check pannalaam
+* Project progress follow pannalaam
+
+But avanga organization full administration panna mudiyadhu.
+
+---
+
+### 5. Employee
+
+Employee normal development team member.
+
+Avanga:
+
+* Assigned projects view pannalaam
+* Assigned tasks view pannalaam
+* Task status update pannalaam
+* Work progress update pannalaam
+* Deadlines view pannalaam
+* Leave request submit pannalaam
+* Personal workload view pannalaam
+
+---
+
+# 🔹 Project and Task Management
+
+DevOrbia-la project create pannumbodhu:
+
+* Project name
+* Description
+* Project manager
+* Team
+* Members
+* Priority
+* Start date
+* Deadline
+* Status
+
+maari information maintain pannuvom.
+
+Project-kulla tasks create pannuvom.
+
+Task-ku:
+
+* Assignee
+* Priority
+* Due date
+* Status
+* Estimated effort
+* Project
+* Team
+
+maari details irukkum.
+
+---
+
+# 🔹 Task Workflow
+
+Task normal-a:
+
+**Backlog → To Do → In Progress → Review → Done**
+
+nu move aagum.
+
+For example, developer-ku oru task assign pannina initially **To Do**.
+
+Developer work start pannumbodhu:
+
+**In Progress**
+
+Code complete pannitu testing/review-ku:
+
+**Review**
+
+Review successfully complete aana:
+
+**Done**
+
+---
+
+# 🔹 Delayed Tasks
+
+Task-ku due date irukkum.
+
+For example, task deadline August 30.
+
+August 31 varaikum task complete aagala na, system adha **Overdue/Delayed** nu identify pannum.
+
+So Project Manager immediately delayed work identify panna mudiyum.
+
+---
+
+# 🔹 Project Completion
+
+Project complete nu simply manually percentage set pannuradhu mattum illa.
+
+Project progress should be calculated based on its tasks.
+
+For example:
+
+100 tasks irukku.
+
+80 tasks completed.
+
+So approximately **80% task completion**.
+
+But additionally project health, overdue tasks and deadlines consider pannina project actually healthy-a irukka illaya nu identify panna mudiyum.
+
+This is where our AI features become useful.
+
+---
+
+# 🤖 Main New Features of DevOrbia
+
+DevOrbia-la normal management features irukkum.
+
+But our major innovation is **AI-assisted management intelligence.**
+
+Five major AI features finalize pannirukkom.
+
+---
+
+## 1. 🤖 AI Resource Assignment
+
+Suppose Project Manager oru project-ku team assign panna poranga.
+
+AI simply random-a employee suggest pannaadhu.
+
+It can consider:
+
+* Employee skills
+* Previous project experience
+* Current workload
+* Current assignments
+* Availability
+* Department
+* Team
+* Task requirements
+* Deadline
+* Estimated effort
+
+Based on these factors, AI suitable employees or teams-ai **recommend** pannum.
+
+Final decision manager-oda control-la dhaan irukkum.
+
+AI suggestion only recommendation.
+
+---
+
+# 2. 🚨 AI Project Risk & Health Detection
+
+Project currently active-a irukku.
+
+But internally:
+
+* Too many overdue tasks
+* Important tasks incomplete
+* Deadline very close
+* Team overloaded
+* Progress slow
+* Critical tasks delayed
+
+irundha normal dashboard-la immediately identify panna difficult.
+
+DevOrbia AI multiple project signals analyze panni:
+
+**Healthy / Warning / At Risk / Critical**
+
+maari project health indicate pannum.
+
+Example:
+
+> “This project is at high risk because 32% of critical tasks are overdue and the deadline is approaching.”
+
+So manager problem become before project failure.
+
+---
+
+# 3. ⚖️ AI Workload Balancing
+
+Suppose:
+
+Employee A-ku 15 active tasks.
+
+Employee B-ku 4 tasks.
+
+Employee C-ku 6 tasks.
+
+Task count mattum paatha workload exact-a theriyadhu.
+
+AI consider pannum:
+
+* Number of tasks
+* Priority
+* Estimated effort
+* Deadlines
+* Current project
+* Task complexity
+* Availability
+
+Then AI identify pannum:
+
+**Employee A – Overloaded**
+
+**Employee B – Available**
+
+Then suitable work redistribution recommendation provide pannum.
+
+This helps prevent employee burnout and improves resource utilization.
+
+---
+
+# 4. 🏖️ Leave Impact Analysis + Smart Reassignment
+
+Idhu project-la another important feature.
+
+Suppose oru developer leave request submit pannuraanga.
+
+System simply:
+
+**Leave → Approve**
+
+nu stop aagaadhu.
+
+Before approval, system analyze pannum:
+
+* Employee currently assigned tasks
+* Task deadlines
+* Task priority
+* Project deadline
+* Critical tasks
+* Team availability
+* Other employees' workload
+
+Then system can tell the manager:
+
+> “This leave may affect 2 high-priority tasks and one project deadline.”
+
+And AI can suggest:
+
+> “Task X can be temporarily reassigned to Employee B.”
+
+So leave management and project management are connected.
+
+---
+
+# 5. 🏆 Performance & Recognition Intelligence
+
+DevOrbia-la employees-ku motivation kudukka performance-based recognition system irukkum.
+
+But simply:
+
+**“Employee with most tasks = Best Employee”**
+
+nu decide panna maatom.
+
+Different factors consider pannuvom.
+
+For example:
+
+* Tasks completed
+* On-time completion
+* Task priority
+* Quality-related indicators
+* Consistency
+* Workload
+* Project contribution
+* Team contribution
+
+Based on these measurable factors, system can identify:
+
+**Best Employee**
+
+**Best Team**
+
+**Best Team Leader**
+
+**Top Contributor**
+
+etc.
+
+Idhu users-ku motivation create pannum.
+
+---
+
+# 🏆 Role-Based Dashboard
+
+Every user-ku relevant dashboard irukkum.
+
+For example Employee login pannumbodhu:
+
+* My Tasks
+* My Projects
+* My Progress
+* My Workload
+* Upcoming Deadlines
+* Recognition
+
+maari information display aagum.
+
+Team Leader-ku:
+
+* Team workload
+* Team progress
+* Team performance
+* Pending tasks
+* Overdue tasks
+
+Project Manager-ku:
+
+* Project health
+* Project progress
+* Risk
+* Team workload
+* Upcoming deadlines
+
+Organization Admin-ku:
+
+* Employees
+* Departments
+* Teams
+* Projects
+* Organization performance
+
+maari display pannuvom.
+
+---
+
+# 📧 Email Notifications
+
+DevOrbia-la important events-ku email notification architecture irukkum.
+
+For example:
+
+When a task is assigned:
+
+**Employee-ku task assignment email.**
+
+Other possible notifications:
+
+* Task assigned
+* Task reassigned
+* Deadline approaching
+* Task overdue
+* Leave request submitted
+* Leave approved/rejected
+* Project assignment
+* Important project updates
+
+This makes the platform more practical for real organizational usage.
+
+---
+
+# 🏖️ Leave Management
+
+Employees, Team Leaders, Project Managers and other organization users can request leave according to their role and reporting structure.
+
+For example:
+
+**Employee → Team Leader / appropriate manager**
+
+**Team Leader → Project/department authority**
+
+**Project Manager → Organization-level authority**
+
+But **Super Admin is not involved in organization employee leave approval.**
+
+Because Super Admin belongs to the DevOrbia platform administration layer, not the company's internal management hierarchy.
+
+Leave approval can also consider project impact and deadlines.
+
+---
+
+# 🔐 Security
+
+Security is one of the important parts of this project.
+
+We will implement:
+
+* Authentication
+* Role-Based Access Control
+* Multi-Tenant Isolation
+* Password Hashing
+* Secure Cookies
+* Input Validation
+* API Authorization
+* Resource Ownership Verification
+* Rate Limiting where appropriate
+* Centralized Error Handling
+
+For example, frontend-la button hide pannirundhaalum, user API direct-a call pannina backend permission check pannum.
+
+---
+
+# 🛠️ Technology Stack
+
+Frontend:
+
+**React + Vite + JavaScript + Tailwind CSS v4 + React Router + Zustand + Axios + Lucide React**
+
+Backend:
+
+**Node.js + Express.js + JavaScript**
+
+Database:
+
+**MongoDB + Mongoose**
+
+Validation:
+
+**Zod**
+
+AI features can be integrated later using suitable AI APIs/models, but the core application should remain functional even without AI.
+
+---
+
+# 🏗️ Backend Architecture
+
+Backend simple-a all logic controller-la podama layered architecture use pannuvom.
+
+Architecture:
+
+**Routes → Controllers → Services → Repositories → Models**
+
+Routes request receive pannum.
+
+Controllers request/response handle pannum.
+
+Services business logic handle pannum.
+
+Repositories database operations handle pannum.
+
+Models MongoDB structure define pannum.
+
+This makes the project maintainable and scalable.
+
+---
+
+# 🎯 Final Goal
+
+Overall-a DevOrbia is not just a task management application.
+
+It is a:
+
+**Software Development Organization Management + Project Management + Workforce Management + AI Decision Support Platform.**
+
+Its main purpose is to help an organization answer questions like:
+
+> **“Who should work on this?”**
+
+> **“Who is overloaded?”**
+
+> **“Which project is at risk?”**
+
+> **“Will this employee's leave affect the deadline?”**
+
+> **“Who is performing well?”**
+
+> **“Where should the work be redistributed?”**
+
+Instead of managers manually analyzing all these things, DevOrbia uses the organization's actual data and AI-based recommendations to support better decisions.
+
+But importantly, **AI will recommend, not blindly control the organization.**
+
+The final decision will remain with authorized human managers.
+
+---
+
+## 🔥 One-Line Conclusion
+
+**“DevOrbia is an AI-powered, secure multi-tenant software development management platform that connects organizational structure, employees, teams, projects, tasks, workflows, leave management, performance and intelligent decision support in one centralized system.”**
+
+**Thank you.**

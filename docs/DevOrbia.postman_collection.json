@@ -1,0 +1,838 @@
+{
+  "info": {
+    "name": "DevOrbia API",
+    "description": "Cookie-based API starter. Set email/password locally, sign in, and use the same Postman cookie jar. Fill date/record variables with eligible test data. PATCH revisions must match the latest record. Role restrictions apply; switch accounts deliberately. Management requests change data: execute individually on a test database. See docs/API.md for the complete reference.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "csrf",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "organizationId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "departmentId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teamId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "managerId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "employeeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "projectId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "leaveId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "startDate",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "dueDate",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/health"
+          }
+        },
+        {
+          "name": "Sign in",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const data = pm.response.json().data;",
+                  "  pm.collectionVariables.set(\"csrf\", data.csrf);",
+                  "  pm.collectionVariables.set(\"employeeId\", data.user.employeeId || \"\");",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Current identity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/me"
+          }
+        },
+        {
+          "name": "Refresh session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/refresh",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Request recovery",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/forgot-password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Sign out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/logout",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Platform administrator",
+      "item": [
+        {
+          "name": "Organizations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/organizations?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Create organization",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/organizations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Organization\",\n  \"slug\": \"example-organization\",\n  \"email\": \"office@example.test\",\n  \"adminName\": \"Organization Administrator\",\n  \"adminEmail\": \"admin@example.test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const data = pm.response.json().data;",
+                  "  pm.collectionVariables.set(\"organizationId\", data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Workspace reads",
+      "item": [
+        {
+          "name": "Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/settings"
+          }
+        },
+        {
+          "name": "People",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/employees?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Departments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/departments?archived=false"
+          }
+        },
+        {
+          "name": "Teams",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/teams?archived=false"
+          }
+        },
+        {
+          "name": "Projects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/projects?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Project detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/tasks?projectId={{projectId}}&page=1&limit=20"
+          }
+        },
+        {
+          "name": "Task detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        },
+        {
+          "name": "Leave",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/leave"
+          }
+        },
+        {
+          "name": "Leave balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/leave/balance"
+          }
+        },
+        {
+          "name": "Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications"
+          }
+        },
+        {
+          "name": "Activity (org admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/activity"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Management writes \u2014 use test records",
+      "item": [
+        {
+          "name": "Invite employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/employees",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Employee\",\n  \"email\": \"employee@example.test\",\n  \"role\": \"EMPLOYEE\",\n  \"joiningDate\": \"{{startDate}}\",\n  \"skills\": [\n    \"React\",\n    \"Node.js\"\n  ],\n  \"hoursPerWeek\": 40\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const data = pm.response.json().data;",
+                  "  pm.collectionVariables.set(\"employeeId\", data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/departments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Engineering\",\n  \"description\": \"Example department\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const data = pm.response.json().data;",
+                  "  pm.collectionVariables.set(\"departmentId\", data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create team",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/teams",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Platform\",\n  \"departmentId\": \"{{departmentId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const data = pm.response.json().data;",
+                  "  pm.collectionVariables.set(\"teamId\", data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/projects",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Example Project\",\n  \"code\": \"EXAMPLE\",\n  \"managerId\": \"{{managerId}}\",\n  \"startDate\": \"{{startDate}}\",\n  \"dueDate\": \"{{dueDate}}\",\n  \"teamIds\": [\n    \"{{teamId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const data = pm.response.json().data;",
+                  "  pm.collectionVariables.set(\"projectId\", data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/tasks",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"projectId\": \"{{projectId}}\",\n  \"title\": \"Example delivery task\",\n  \"startDate\": \"{{startDate}}\",\n  \"dueDate\": \"{{dueDate}}\",\n  \"estimatedHours\": 8,\n  \"remainingHours\": 8\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "  const data = pm.response.json().data;",
+                  "  pm.collectionVariables.set(\"taskId\", data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Move task to TODO",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/tasks/{{taskId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"revision\": 0,\n  \"status\": \"TODO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Mark notifications read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-CSRF-Token",
+                "value": "{{csrf}}"
+              }
+            ],
+            "url": "{{baseUrl}}/notifications/read-all",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Intelligence",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/dashboard"
+          }
+        },
+        {
+          "name": "Project analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/analytics?projectId={{projectId}}"
+          }
+        },
+        {
+          "name": "Task assignment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/ai/tasks/{{taskId}}/assignment"
+          }
+        },
+        {
+          "name": "Project resources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/ai/projects/{{projectId}}/resources"
+          }
+        },
+        {
+          "name": "Workload balancing",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/ai/workload-balancing"
+          }
+        },
+        {
+          "name": "Leave impact",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Requested-With",
+                "value": "DevOrbia"
+              }
+            ],
+            "url": "{{baseUrl}}/ai/leave/{{leaveId}}/impact"
+          }
+        }
+      ]
+    }
+  ]
+}

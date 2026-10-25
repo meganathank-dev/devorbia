@@ -1,0 +1,1470 @@
+# DevOrbia — Technical Architecture v1.0
+
+## 1. Overall Architecture
+
+DevOrbia will use a **modular monolithic MERN architecture**.
+
+```text
+                    ┌──────────────────────────┐
+                    │        DevOrbia          │
+                    │      Web Application      │
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │       React Frontend      │
+                    │ React + Vite + Tailwind   │
+                    │ Zustand + Axios + Router  │
+                    └────────────┬─────────────┘
+                                 │
+                              HTTPS
+                                 │
+                    ┌────────────▼─────────────┐
+                    │      Express Backend      │
+                    │        /api/v1             │
+                    └────────────┬─────────────┘
+                                 │
+            ┌────────────────────┼────────────────────┐
+            │                    │                    │
+            ▼                    ▼                    ▼
+      Authentication        Business Logic       AI Services
+      Authorization         Services             AI Analysis
+      Tenant Isolation      Workflows            Recommendations
+            │                    │                    │
+            └────────────────────┼────────────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │       Repository Layer    │
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────▼─────────────┐
+                    │         MongoDB           │
+                    │        Mongoose ORM        │
+                    └───────────────────────────┘
+```
+
+### Why modular monolith?
+
+For the first version, **microservices are unnecessary**.
+
+A modular monolith gives us:
+
+* Easier development
+* Easier deployment
+* Easier debugging
+* Lower infrastructure cost
+* Clear module boundaries
+* Easier testing
+* Easier Antigravity development
+
+If DevOrbia becomes a large production platform later, individual modules can be extracted into services.
+
+---
+
+# 2. Technology Stack
+
+## Frontend
+
+| Technology      | Purpose              |
+| --------------- | -------------------- |
+| React           | UI                   |
+| Vite            | Build tool           |
+| JavaScript      | Programming language |
+| Tailwind CSS v4 | Styling              |
+| React Router    | Routing              |
+| Zustand         | Global state         |
+| Axios           | API communication    |
+| Lucide React    | Icons                |
+
+## Backend
+
+| Technology | Purpose              |
+| ---------- | -------------------- |
+| Node.js    | Runtime              |
+| Express.js | REST API             |
+| JavaScript | Programming language |
+| Mongoose   | MongoDB ODM          |
+| MongoDB    | Database             |
+| Zod        | Validation           |
+
+## Security
+
+Use:
+
+* HTTP-only cookies
+* Password hashing
+* Authentication middleware
+* RBAC
+* Tenant isolation
+* CORS
+* Helmet
+* Rate limiting
+* Request-size limits
+* Secure environment variables
+
+---
+
+# 3. Repository Structure
+
+The project should use a workspace/monorepo structure:
+
+```text
+DevOrbia/
+│
+├── client/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── constants/
+│   │   ├── features/
+│   │   ├── hooks/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── routes/
+│   │   ├── stores/
+│   │   ├── utils/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   └── package.json
+│
+├── server/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── repositories/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── validators/
+│   │   ├── utils/
+│   │   ├── app.js
+│   │   └── server.js
+│   │
+│   └── package.json
+│
+├── tests/
+│
+├── docs/
+│
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md
+```
+
+The actual structure can be refined during Phase 0, but **we should avoid constantly restructuring it later**.
+
+---
+
+# 4. Backend Layer Architecture
+
+The backend follows:
+
+```text
+Request
+   ↓
+Route
+   ↓
+Middleware
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Mongoose Model
+   ↓
+MongoDB
+```
+
+## Routes
+
+Routes define endpoints.
+
+Example:
+
+```text
+POST /api/v1/projects
+```
+
+Routes should not contain business logic.
+
+---
+
+## Middleware
+
+Handles cross-cutting concerns:
+
+```text
+Authentication
+Authorization
+Tenant Context
+Validation
+Rate Limiting
+Error Handling
+```
+
+---
+
+## Controllers
+
+Controllers should be thin.
+
+They:
+
+1. Read request
+2. Call service
+3. Return response
+
+Business logic should **not** be placed inside controllers.
+
+---
+
+## Services
+
+Services contain business rules.
+
+Example:
+
+```text
+createProject()
+assignProjectMember()
+changeTaskStatus()
+requestLeave()
+approveLeave()
+calculateProjectHealth()
+```
+
+This is where authorization-sensitive business decisions can be enforced alongside dedicated authorization utilities/policies.
+
+---
+
+## Repositories
+
+Repositories handle MongoDB operations.
+
+For example:
+
+```text
+findProjectById()
+findProjectByIdAndOrganization()
+findTasksByProject()
+findEmployeesByOrganization()
+```
+
+This layer helps enforce consistent organization-scoped querying.
+
+---
+
+# 5. Frontend Architecture
+
+Frontend should be **feature-oriented** rather than putting everything into generic folders.
+
+Example:
+
+```text
+features/
+├── auth/
+├── organizations/
+├── employees/
+├── departments/
+├── teams/
+├── projects/
+├── tasks/
+├── leave/
+├── notifications/
+├── analytics/
+├── performance/
+└── ai/
+```
+
+Each feature can contain its own:
+
+```text
+components
+hooks
+api
+utils
+constants
+```
+
+This prevents massive React components.
+
+---
+
+# 6. Authentication Architecture
+
+DevOrbia will use:
+
+**Access authentication + refresh/session mechanism**
+
+with secure cookie handling.
+
+Conceptually:
+
+```text
+Login
+  ↓
+Verify credentials
+  ↓
+Create authenticated session/tokens
+  ↓
+Secure HTTP-only cookie
+  ↓
+Authenticated API request
+  ↓
+Authentication middleware
+  ↓
+Identify user
+  ↓
+Identify organization context
+  ↓
+Authorization
+```
+
+The frontend should **not store long-lived authentication secrets in localStorage**.
+
+---
+
+# 7. User & Employee Separation
+
+This is an important architectural decision.
+
+We should not make one huge document containing everything.
+
+### User
+
+Responsible primarily for identity/authentication:
+
+```text
+_id
+email
+passwordHash
+role
+status
+organizationId
+session/security metadata
+```
+
+### Employee
+
+Responsible for organization/business information:
+
+```text
+_id
+userId
+firstName
+lastName
+jobTitle
+departmentId
+teamId
+organizationId
+joiningDate
+employmentStatus
+profileImage
+```
+
+This keeps:
+
+**Authentication ≠ Employee management**
+
+---
+
+# 8. Role Architecture
+
+Initial roles:
+
+```text
+SUPER_ADMIN
+ORGANIZATION_ADMIN
+PROJECT_MANAGER
+TEAM_LEADER
+EMPLOYEE
+```
+
+### Important hierarchy
+
+This is **not** a simple hierarchy where every role reports directly upward.
+
+Instead:
+
+```text
+                    DEVORBIA PLATFORM
+                           │
+                     SUPER ADMIN
+                           │
+                 Platform administration
+                           │
+              ─────────────┼─────────────
+                           │
+                     ORGANIZATION
+                           │
+                ORGANIZATION ADMIN
+                           │
+              ┌────────────┼─────────────┐
+              │            │             │
+         Departments     Projects       Teams
+              │            │             │
+           Teams       PMs/Members       TLs
+              │
+          Employees
+```
+
+The exact reporting/approval relationships inside an organization will be represented through organization-owned relationships rather than treating Super Admin as part of that chain.
+
+---
+
+# 9. Super Admin Boundary
+
+This must be permanently clear in the architecture.
+
+**Super Admin is a DevOrbia platform administrator.**
+
+Super Admin:
+
+* Creates organizations
+* Grants/revokes platform access
+* Activates/deactivates organizations
+* Views platform-level statistics
+* Manages platform-level administration
+
+Super Admin does **not**:
+
+* Approve employee leave
+* Assign company tasks
+* Manage company projects
+* Manage company teams
+* Manage company employees
+* View organization internal data unless a deliberately authorized platform-level function requires it
+
+This prevents the platform administrator from becoming an accidental employee of every organization.
+
+---
+
+# 10. Multi-Tenant Architecture
+
+This is one of DevOrbia's most important architectural rules.
+
+Most organization-owned resources contain:
+
+```text
+organizationId
+```
+
+For example:
+
+```text
+Employee
+Department
+Team
+Project
+Task
+LeaveRequest
+Notification
+Activity
+```
+
+---
+
+# 11. Tenant Isolation
+
+Never trust a client-supplied organization ID.
+
+The backend obtains organization context from the authenticated identity/session.
+
+For example, instead of:
+
+```text
+GET /projects/:projectId
+```
+
+doing:
+
+```text
+findById(projectId)
+```
+
+the repository/service layer should effectively enforce:
+
+```text
+find project where:
+
+_id = projectId
+AND organizationId = authenticatedOrganizationId
+```
+
+This protects against:
+
+**IDOR + cross-tenant access.**
+
+---
+
+# 12. Authorization Architecture
+
+We should use multiple authorization layers.
+
+```text
+Authentication
+      ↓
+Role authorization
+      ↓
+Organization authorization
+      ↓
+Resource authorization
+      ↓
+Business-rule authorization
+```
+
+Example:
+
+Employee attempts to modify a task.
+
+System checks:
+
+1. Is the user authenticated?
+2. Is the user's account active?
+3. Is the user an Employee?
+4. Does the task belong to their organization?
+5. Is the employee allowed to modify this task?
+6. Is the requested status transition permitted?
+
+Only then:
+
+**Allow operation.**
+
+---
+
+# 13. Database Architecture
+
+Core collections:
+
+```text
+users
+organizations
+employees
+departments
+teams
+projects
+tasks
+sessions
+passwordResetTokens
+leaveRequests
+```
+
+Later:
+
+```text
+notifications
+activities
+auditEvents
+comments
+attachments
+sprints
+milestones
+```
+
+AI-specific permanent collections should **not** be created unnecessarily.
+
+AI can initially operate on existing business data.
+
+---
+
+# 14. MongoDB Relationships
+
+Conceptually:
+
+```text
+Organization
+│
+├── Users
+│
+├── Employees
+│
+├── Departments
+│   └── Teams
+│       └── Employees
+│
+├── Projects
+│   ├── Project Manager
+│   ├── Teams
+│   ├── Members
+│   └── Tasks
+│
+└── Leave Requests
+```
+
+MongoDB references should be used where relationships are dynamic and large.
+
+Avoid embedding huge collections inside organizations or projects.
+
+---
+
+# 15. Important Database Indexes
+
+Indexes should be based on real query patterns.
+
+Examples:
+
+```text
+users:
+organizationId + email
+
+employees:
+organizationId + email
+organizationId + departmentId
+organizationId + teamId
+
+projects:
+organizationId + status
+organizationId + projectManagerId
+
+tasks:
+organizationId + projectId
+organizationId + assigneeId
+organizationId + status
+organizationId + dueDate
+
+leaveRequests:
+organizationId + employeeId
+organizationId + status
+```
+
+Exact indexes will be finalized based on implemented queries.
+
+---
+
+# 16. Project Architecture
+
+A project has:
+
+```text
+Organization
+      ↓
+Project Manager
+      ↓
+Teams
+      ↓
+Project Members
+      ↓
+Tasks
+```
+
+A project can have multiple teams and members.
+
+A project has one primary Project Manager initially.
+
+---
+
+# 17. Task Architecture
+
+Task:
+
+```text
+Organization
+      ↓
+Project
+      ↓
+Team
+      ↓
+Employee
+```
+
+A task should belong to a project.
+
+The organization should be explicit on the task for secure and efficient tenant filtering.
+
+---
+
+# 18. Task Workflow
+
+Initial workflow:
+
+```text
+BACKLOG
+   ↓
+TODO
+   ↓
+IN_PROGRESS
+   ↓
+REVIEW
+   ↓
+DONE
+```
+
+Additionally, we should support an **Overdue** concept.
+
+Important distinction:
+
+**Overdue is primarily a time-derived condition, not necessarily a workflow column.**
+
+For example:
+
+```text
+Status = IN_PROGRESS
+Due date = passed
+```
+
+The task can be displayed as:
+
+**In Progress + Overdue**
+
+rather than creating unnecessary workflow states.
+
+This keeps workflow logic clean.
+
+---
+
+# 19. Project Health
+
+Project health should initially be derived from actual metrics.
+
+Inputs may include:
+
+* Completion percentage
+* Overdue task percentage
+* Critical task status
+* Deadline proximity
+* Workload
+* Progress velocity
+
+Possible result:
+
+```text
+HEALTHY
+WARNING
+AT_RISK
+CRITICAL
+```
+
+The deterministic calculation should exist **before AI**.
+
+Then AI can provide deeper interpretation.
+
+---
+
+# 20. Leave Architecture
+
+Leave belongs to the organization.
+
+```text
+Organization
+      ↓
+Employee
+      ↓
+Leave Request
+```
+
+Leave request contains information such as:
+
+```text
+employeeId
+organizationId
+leaveType
+startDate
+endDate
+reason
+status
+approver
+timestamps
+```
+
+The approval authority should be determined from the organization's configured management/reporting relationships.
+
+**Super Admin is excluded from this organizational approval chain.**
+
+---
+
+# 21. Email Architecture
+
+Don't put email-sending code directly inside controllers.
+
+Use:
+
+```text
+Business Event
+      ↓
+Notification Service
+      ↓
+Email Service
+      ↓
+Email Provider
+```
+
+For example:
+
+```text
+Task Assigned
+      ↓
+Notification Service
+      ↓
+Email Service
+      ↓
+Employee receives email
+```
+
+This allows us to replace the email provider later without rewriting business logic.
+
+---
+
+# 22. AI Architecture
+
+AI should be a separate module.
+
+```text
+Existing DevOrbia Data
+          ↓
+Authorization Check
+          ↓
+AI Context Builder
+          ↓
+AI Service
+          ↓
+AI Recommendation
+          ↓
+Validation / Safety Checks
+          ↓
+User Review
+          ↓
+Optional Human Confirmation
+          ↓
+Actual System Action
+```
+
+### Critical rule
+
+AI must **never directly bypass application authorization**.
+
+---
+
+# 23. AI Resource Assignment
+
+AI analyzes:
+
+```text
+Skills
+Experience
+Current workload
+Availability
+Department
+Team
+Project requirements
+Task requirements
+Deadline
+Priority
+Estimated effort
+```
+
+Output:
+
+```text
+Recommended employee/team
+Confidence or suitability explanation
+Reasons
+Potential concerns
+```
+
+The manager decides whether to apply it.
+
+---
+
+# 24. AI Workload Balancing
+
+AI analyzes:
+
+```text
+Active tasks
+Estimated effort
+Priority
+Deadlines
+Complexity
+Current assignments
+Availability
+```
+
+Output:
+
+```text
+Overloaded employees
+Underutilized employees
+Suggested redistribution
+Reasoning
+```
+
+No automatic reassignment without authorization.
+
+---
+
+# 25. AI Project Risk Detection
+
+AI receives authorized project data.
+
+It analyzes:
+
+```text
+Task progress
+Overdue work
+Critical tasks
+Deadline
+Workload
+Completion rate
+Project velocity
+```
+
+Output:
+
+```text
+Health
+Risk factors
+Explanation
+Recommended actions
+```
+
+---
+
+# 26. AI Leave Impact Analysis
+
+When leave is requested:
+
+```text
+Leave Request
+      ↓
+Affected Tasks
+      ↓
+Affected Projects
+      ↓
+Deadlines
+      ↓
+Team Capacity
+      ↓
+Workload
+      ↓
+AI Analysis
+      ↓
+Impact Report
+      ↓
+Reassignment Suggestions
+```
+
+The manager remains responsible for the final decision.
+
+---
+
+# 27. AI Performance Intelligence
+
+AI should not simply rank users by task count.
+
+It should consider:
+
+```text
+Completion
+On-time delivery
+Task priority
+Estimated effort
+Consistency
+Contribution
+Workload context
+Project contribution
+Team contribution
+```
+
+The system should avoid turning the platform into an unhealthy competition.
+
+Recognition should be **evidence-based and explainable**.
+
+---
+
+# 28. AI Natural Language Queries
+
+Eventually:
+
+```text
+User
+ ↓
+Question
+ ↓
+Permission Check
+ ↓
+Authorized Data Retrieval
+ ↓
+AI Context
+ ↓
+AI Response
+```
+
+Example:
+
+> "Which tasks are overdue?"
+
+The AI should only receive the tasks the user is permitted to see.
+
+**Never give the AI unrestricted database access.**
+
+---
+
+# 29. API Architecture
+
+Base URL:
+
+```text
+/api/v1
+```
+
+Modules:
+
+```text
+/api/v1/auth
+/api/v1/organizations
+/api/v1/employees
+/api/v1/departments
+/api/v1/teams
+/api/v1/projects
+/api/v1/tasks
+/api/v1/leave
+/api/v1/notifications
+/api/v1/dashboard
+/api/v1/analytics
+/api/v1/ai
+```
+
+AI endpoints should remain separate from normal CRUD endpoints.
+
+---
+
+# 30. API Response Structure
+
+Use consistent responses.
+
+Success example:
+
+```text
+{
+  success: true,
+  data: ...
+}
+```
+
+Error example:
+
+```text
+{
+  success: false,
+  error: {
+    code: "...",
+    message: "..."
+  }
+}
+```
+
+Internal stack traces and sensitive implementation details must never be returned in production.
+
+---
+
+# 31. Validation Architecture
+
+Every external input should be validated.
+
+```text
+Request
+   ↓
+Zod Schema
+   ↓
+Validated Data
+   ↓
+Controller
+   ↓
+Service
+```
+
+Validate:
+
+* Body
+* Params
+* Query
+* IDs
+* Dates
+* Enums
+* Pagination
+* Search
+* Filters
+
+---
+
+# 32. Error Architecture
+
+Use centralized application errors.
+
+Conceptually:
+
+```text
+ValidationError
+AuthenticationError
+AuthorizationError
+NotFoundError
+ConflictError
+BusinessRuleError
+DatabaseError
+InternalServerError
+```
+
+Central error middleware converts these into consistent API responses.
+
+---
+
+# 33. Frontend Routing
+
+Conceptually:
+
+```text
+/
+├── login
+├── forgot-password
+├── reset-password
+│
+└── app
+    ├── dashboard
+    ├── employees
+    ├── departments
+    ├── teams
+    ├── projects
+    ├── tasks
+    ├── leave
+    ├── analytics
+    ├── performance
+    ├── notifications
+    └── settings
+```
+
+Super Admin will have a separate platform-management workspace.
+
+Organization users will have organization-specific navigation.
+
+---
+
+# 34. Dashboard Architecture
+
+Dashboards should consume actual APIs.
+
+```text
+Dashboard
+    ↓
+Dashboard API
+    ↓
+Services
+    ↓
+Repositories
+    ↓
+MongoDB
+```
+
+No hardcoded statistics.
+
+AI insights should be treated as an additional intelligence layer rather than replacing basic metrics.
+
+---
+
+# 35. State Management
+
+Use Zustand for global client state such as:
+
+```text
+Authentication
+Current user
+Organization context
+UI preferences
+Global notifications
+```
+
+Do not put every API response into global state.
+
+Feature-specific data should remain local or use appropriate data-fetching patterns.
+
+---
+
+# 36. UI Architecture
+
+DevOrbia should follow a **professional B2B SaaS design system**.
+
+Main layout:
+
+```text
+┌──────────────────────────────────────────────┐
+│ Header                                       │
+├───────────────┬──────────────────────────────┤
+│               │                              │
+│   Sidebar     │       Main Workspace         │
+│               │                              │
+│               │                              │
+└───────────────┴──────────────────────────────┘
+```
+
+Design characteristics:
+
+* Clean
+* Professional
+* Dense but readable
+* Responsive
+* Accessible
+* Consistent
+* Minimal unnecessary animation
+
+Avoid excessive:
+
+* Gradients
+* Glows
+* Glassmorphism
+* Decorative animations
+
+---
+
+# 37. Auditability
+
+Because DevOrbia manages organizational data, important administrative actions should eventually be recorded.
+
+Examples:
+
+```text
+Employee created
+Employee deactivated
+Project created
+Task assigned
+Task reassigned
+Role changed
+Leave approved
+Leave rejected
+Organization settings changed
+```
+
+This can be implemented as an **Activity/Audit module** after the core system is stable.
+
+---
+
+# 38. Testing Architecture
+
+Testing should exist throughout development, not only at the end.
+
+### Unit
+
+Test:
+
+* Services
+* Utilities
+* Validators
+* Business rules
+
+### Integration
+
+Test:
+
+* API
+* Database
+* Authentication
+* Authorization
+
+### Security
+
+Test:
+
+* Tenant isolation
+* IDOR
+* RBAC
+* Unauthorized access
+
+### End-to-End
+
+Test:
+
+```text
+Organization
+→ Employee
+→ Department
+→ Team
+→ Project
+→ Task
+→ Assignment
+→ Completion
+→ Dashboard
+```
+
+---
+
+# 39. Critical Security Test
+
+This test is mandatory.
+
+### Scenario
+
+```text
+Organization A user
+        ↓
+Attempts to access
+        ↓
+Organization B project
+```
+
+Expected:
+
+```text
+DENIED
+```
+
+No Organization B data should be returned.
+
+The same principle must be tested for:
+
+* Employees
+* Teams
+* Departments
+* Tasks
+* Projects
+* Leave
+* Analytics
+
+---
+
+# 40. Development Environment
+
+For the initial completely-free development approach:
+
+### Local
+
+```text
+React/Vite
+Node.js
+Express
+MongoDB
+```
+
+Everything can initially run locally.
+
+AI should be architected so that the provider can be configured later rather than hardcoded into the application.
+
+This prevents the entire project from depending on one AI provider.
+
+---
+
+# 41. Environment Variables
+
+Secrets should never be hardcoded.
+
+Example:
+
+```text
+NODE_ENV
+PORT
+MONGODB_URI
+SESSION_SECRET
+ACCESS_TOKEN_SECRET
+REFRESH_TOKEN_SECRET
+CLIENT_URL
+
+EMAIL_HOST
+EMAIL_PORT
+EMAIL_USER
+EMAIL_PASSWORD
+
+AI_PROVIDER
+AI_API_KEY
+```
+
+Only `.env.example` should be committed.
+
+Actual `.env` must be ignored by Git.
+
+---
+
+# 42. What We Will NOT Do
+
+For Version 1, we will intentionally avoid:
+
+* Microservices
+* Kubernetes
+* Complex event buses
+* Unnecessary Redis dependency
+* Complex DevOps infrastructure
+* Multiple databases
+* Real-time WebSockets before needed
+* AI-first architecture
+* Automatic AI decision-making
+* Excessive third-party integrations
+
+This keeps the project achievable and reliable.
+
+---
+
+# 43. Final Architecture
+
+The complete conceptual architecture is:
+
+```text
+                         DEVORBIA
+                            │
+             ┌──────────────┴──────────────┐
+             │                             │
+       PLATFORM LAYER              ORGANIZATION LAYER
+             │                             │
+        Super Admin                Organization Admin
+                                           │
+                         ┌─────────────────┼─────────────────┐
+                         │                 │                 │
+                    Departments         Teams            Projects
+                         │                 │                 │
+                         └────────────┬────┘                 │
+                                      │                      │
+                                  Employees                  │
+                                                             │
+                                                         Tasks
+                                                             │
+                                                         Workflow
+                                                             │
+                                                     Progress / Deadlines
+                                                             │
+                    ┌────────────────────────────────────────┘
+                    │
+             Dashboards / Analytics
+                    │
+                    ▼
+             AI Intelligence Layer
+                    │
+       ┌────────────┼─────────────┐
+       │            │             │
+ Resource       Workload       Project
+Assignment      Balance        Risk
+       │            │             │
+       └────────────┼─────────────┘
+                    │
+             Leave Impact
+                    │
+             Performance
+                    │
+              AI Assistant
+```
+
+---
+
+# 🔒 Architecture Rules We Are Locking
+
+These should be treated as **non-negotiable project rules**:
+
+1. **MERN stack remains the core stack.**
+2. **Modular monolith for Version 1.**
+3. **Backend is the source of truth for authorization.**
+4. **Every organization-owned resource is tenant-scoped.**
+5. **Never trust client-supplied organization IDs for authorization.**
+6. **Super Admin is platform-level, not organization-level.**
+7. **One Organization Admin per organization in Version 1.**
+8. **AI recommends; authorized humans make final decisions.**
+9. **AI never bypasses RBAC or tenant isolation.**
+10. **Controllers remain thin.**
+11. **Business logic belongs in services.**
+12. **Database operations belong in repositories.**
+13. **All external input is validated with Zod.**
+14. **No hardcoded secrets or organization IDs.**
+15. **No fake dashboard statistics.**
+16. **Overdue is a derived condition, not necessarily a workflow state.**
+17. **Core deterministic metrics must exist before AI analysis.**
+18. **Every major phase must be tested before the next phase.**
+19. **Existing working features must not be unnecessarily regenerated.**
+20. **No unnecessary technologies or infrastructure.**

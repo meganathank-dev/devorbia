@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.local-mail/
+.local-db/
+.demo-credentials.txt
+coverage/
+test-results/
+*.log
+.DS_Store

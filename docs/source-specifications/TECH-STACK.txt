@@ -1,0 +1,308 @@
+For the **final DevOrbia**, I recommend keeping the tech stack exactly as below. It is fully aligned with your ₹0-cost requirement and the architecture we finalized.
+
+# 🛠️ DevOrbia — Final Tech Stack
+
+## 🎨 Frontend
+
+| Technology          | Purpose                         |
+| ------------------- | ------------------------------- |
+| **React**           | Build the web application UI    |
+| **Vite**            | Frontend build tool             |
+| **JavaScript**      | Primary frontend language       |
+| **Tailwind CSS v4** | Styling and responsive UI       |
+| **React Router**    | Routing and protected routes    |
+| **Zustand**         | Global/client state management  |
+| **Axios**           | API communication               |
+| **Lucide React**    | Icons                           |
+| **Recharts**        | Dashboards and analytics charts |
+
+### Frontend architecture
+
+```text
+React
+ │
+ ├── Pages
+ ├── Layouts
+ ├── Components
+ ├── Features
+ ├── Hooks
+ ├── Stores (Zustand)
+ ├── API Layer (Axios)
+ ├── Routes
+ └── Utilities
+```
+
+---
+
+# ⚙️ Backend
+
+| Technology     | Purpose                  |
+| -------------- | ------------------------ |
+| **Node.js**    | Runtime                  |
+| **Express.js** | REST API framework       |
+| **JavaScript** | Backend language         |
+| **Mongoose**   | MongoDB ODM              |
+| **MongoDB**    | Database                 |
+| **Zod**        | Request/input validation |
+
+### Backend architecture
+
+```text
+Client
+  ↓
+Routes
+  ↓
+Middleware
+  ↓
+Controllers
+  ↓
+Services
+  ↓
+Repositories
+  ↓
+Mongoose
+  ↓
+MongoDB
+```
+
+The important rule:
+
+**Controllers should remain thin.**
+
+Business logic belongs primarily in the **service layer**.
+
+---
+
+# 🔐 Authentication & Security
+
+We'll build the authentication system using:
+
+* Password hashing
+* Access/refresh authentication architecture
+* HTTP-only cookies
+* Authentication middleware
+* RBAC middleware
+* Tenant authorization
+* Resource-level authorization
+* Zod validation
+* Secure CORS
+* Security headers
+* Rate limiting
+* Request-size limits
+* Centralized error handling
+* Environment variables
+
+We won't add an external authentication service unless there is a genuine need.
+
+---
+
+# 🤖 AI Layer
+
+This is an important part of DevOrbia.
+
+We should **not tightly couple the application to a single paid AI provider**.
+
+We'll create an internal AI abstraction:
+
+```text
+DevOrbia
+    ↓
+AI Service Layer
+    ↓
+AI Provider Interface
+    ↓
+┌──────────────────────┐
+│ Free / Local AI      │
+│ Development Provider │
+│ Future AI Provider   │
+└──────────────────────┘
+```
+
+The five AI capabilities:
+
+### 1. AI Resource Assignment
+
+Skills + workload + availability + experience + deadlines + project familiarity.
+
+### 2. AI Project Risk & Health Detection
+
+Progress + overdue tasks + blocked tasks + dependencies + workload + deadlines.
+
+### 3. AI Workload Balancing
+
+Employee/team capacity + assignments + deadlines + skills.
+
+### 4. Leave Impact + Smart Reassignment
+
+Leave + affected tasks + deadlines + dependencies + team capacity.
+
+### 5. Performance & Recognition Intelligence
+
+Completion + timeliness + complexity + consistency + contribution + improvement.
+
+The **core scoring/analysis can be implemented locally**, while an AI model can be used where natural-language reasoning or explanations add value.
+
+---
+
+# 📧 Email
+
+We'll create an internal notification/email architecture:
+
+```text
+Application Event
+      ↓
+Notification Service
+      ↓
+Email Service
+      ↓
+SMTP Provider
+```
+
+Examples:
+
+* Task assigned
+* Task reassigned
+* Leave approved/rejected
+* Deadline approaching
+* Task overdue
+* Project risk
+* Project assignment
+
+We'll use a **free-tier/free SMTP option** where possible.
+
+---
+
+# 🗄️ Database
+
+### MongoDB
+
+Core collections:
+
+```text
+users
+organizations
+employees
+departments
+teams
+projects
+tasks
+sessions
+passwordResetTokens
+leaveRequests
+notifications
+```
+
+Later:
+
+```text
+activities
+auditEvents
+comments
+sprints
+milestones
+```
+
+Organization-owned documents will contain an organization reference.
+
+---
+
+# 🧪 Testing
+
+We'll include testing rather than leaving it until the end.
+
+Possible stack:
+
+* **Vitest** for JavaScript unit testing
+* **Supertest** for API/integration testing
+
+Critical tests:
+
+```text
+Authentication
+RBAC
+Tenant isolation
+IDOR prevention
+Project authorization
+Task authorization
+Leave authorization
+Workflow validation
+AI permission boundaries
+```
+
+---
+
+# 🔧 Development Tools
+
+| Tool                | Purpose                 |
+| ------------------- | ----------------------- |
+| **Antigravity IDE** | AI-assisted development |
+| **Git**             | Version control         |
+| **GitHub**          | Repository              |
+| **Postman**         | API testing             |
+| **ESLint**          | Code quality            |
+| **Prettier**        | Formatting              |
+| **npm**             | Package management      |
+
+---
+
+# ☁️ Deployment — ₹0 Target
+
+For the initial project:
+
+```text
+                  GitHub
+                     │
+          ┌──────────┴──────────┐
+          ↓                     ↓
+      Frontend               Backend
+      Free Tier              Free Tier
+          │                     │
+          └──────────┬──────────┘
+                     ↓
+              MongoDB Atlas
+                 Free Tier
+```
+
+Exact deployment providers can be selected later based on the free tiers available when we reach deployment.
+
+---
+
+# 📦 Final Stack in One View
+
+```text
+                 DEVORBIA
+                     │
+       ┌─────────────┴─────────────┐
+       │                           │
+   FRONTEND                     BACKEND
+       │                           │
+   React                        Node.js
+   Vite                         Express
+   JavaScript                   JavaScript
+   Tailwind v4                  Mongoose
+   React Router                 Zod
+   Zustand                         │
+   Axios                            ↓
+   Lucide React                  MongoDB
+   Recharts
+       │
+       └──────────────┬──────────────┘
+                      │
+                 AI SERVICE
+                      │
+        ┌─────────────┴─────────────┐
+        │                                   │
+   Rule/Scoring Engine                 AI Provider
+        │                             (free/local)
+        └─────────────┬─────────────┘
+                      │
+                5 AI FEATURES
+```
+
+### 🎯 The important decision
+
+I would **not add Next.js, TypeScript, Redux, PostgreSQL, Firebase, Supabase, Docker, microservices, Kubernetes, or other technologies just because they are popular**.
+
+Your finalized stack is already more than sufficient to build a serious full-stack project.
+
+**MERN + Tailwind + Zustand + Zod + AI abstraction + proper security + testing** is the right level of complexity for DevOrbia.

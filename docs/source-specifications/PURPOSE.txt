@@ -1,0 +1,111 @@
+**Exactly.** DevOrbia is a **Software Development Management Platform**, **not a software-development execution tool**.
+
+That distinction is very important for our design and requirements.
+
+### DevOrbia's purpose
+
+DevOrbia answers:
+
+> **Who is working on what, who should work on it, how is the project progressing, where are the risks, how is the workforce being utilized, and what decisions should management make?**
+
+It does **not** try to replace tools where developers actually write and execute code.
+
+### Example
+
+A developer might use:
+
+* VS Code → write code
+* GitHub → manage repositories/code
+* Postman → test APIs
+* Figma → design UI
+* Jira/GitHub Issues → potentially manage technical issues
+
+But DevOrbia sits **above the development work** as the management layer:
+
+```text
+                    DEVORBIA
+              Development Management
+                       │
+       ┌───────────────┼────────────────┐
+       ↓               ↓                ↓
+     PEOPLE          PROJECTS          WORK
+       │               │                │
+   Employees        Projects          Tasks
+   Teams            Deadlines         Status
+   Departments      Progress          Workload
+       │               │                │
+       └───────────────┼────────────────┘
+                       ↓
+                  AI INTELLIGENCE
+                       │
+          ┌────────────┼────────────┐
+          ↓            ↓            ↓
+      Assignment      Risk       Workload
+          ↓            ↓            ↓
+       Leave Impact + Reassignment
+                       ↓
+                Performance
+```
+
+### ❌ DevOrbia should NOT become
+
+```text
+❌ Online code editor
+❌ IDE
+❌ Code compiler
+❌ Code execution platform
+❌ Git replacement
+❌ Full collaboration suite
+❌ Developer chat application
+❌ Document editor
+❌ Coding platform
+```
+
+### ✅ DevOrbia SHOULD manage
+
+```text
+Organization
+    ↓
+Departments
+    ↓
+Teams
+    ↓
+Employees
+    ↓
+Projects
+    ↓
+Tasks
+    ↓
+Workload
+    ↓
+Deadlines
+    ↓
+Leave
+    ↓
+Performance
+    ↓
+AI Management Intelligence
+```
+
+For example, **a task in DevOrbia** is a management record:
+
+> "Implement payment gateway"
+
+DevOrbia tracks:
+
+* Who is responsible
+* Which project it belongs to
+* Priority
+* Deadline
+* Status
+* Estimated effort
+* Dependencies
+* Workload
+* Risk
+* Progress
+
+The developer then actually implements the payment gateway using their normal development tools.
+
+So yes — **DevOrbia is the management/control/decision-support layer around software development, not the place where developers actually write the software.**
+
+This distinction should remain a **core product principle** throughout development.

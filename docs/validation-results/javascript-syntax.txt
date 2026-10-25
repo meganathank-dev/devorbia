@@ -1,0 +1,5 @@
+
+> devorbia@1.0.0 check
+> node scripts/check.mjs
+
+Checked JavaScript syntax in 48 files. JSX is checked by npm run build.

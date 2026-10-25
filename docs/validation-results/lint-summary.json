@@ -1,0 +1,13 @@
+{
+  "result": "passed",
+  "files": 64,
+  "errors": 0,
+  "warnings": 0,
+  "tools": {
+    "eslint": "9.39.4",
+    "@eslint/js": "9.39.4",
+    "eslint-plugin-react": "7.37.5",
+    "globals": "14.0.0"
+  },
+  "note": "Used locally cached lint tools. The declared globals dependency is ^16.5.0; repeat npm run lint after a full install."
+}
