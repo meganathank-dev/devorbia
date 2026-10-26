@@ -1,0 +1,9 @@
+
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://devorbia.onrender.com/api/$1"
+    }
+  ]
+}
