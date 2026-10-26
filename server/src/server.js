@@ -21,7 +21,7 @@ try {
   process.on('SIGINT', stop);
   process.on('SIGTERM', stop);
 } catch (error) {
-  console.error(error.name === 'Error' ? error.message : 'Startup failed. Check MongoDB replica-set access and .env configuration.');
+  console.error('Startup error:', error);
   await mongoose.disconnect();
   process.exitCode = 1;
 }
