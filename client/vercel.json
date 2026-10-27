@@ -4,6 +4,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://devorbia.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
