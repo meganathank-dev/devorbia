@@ -122,7 +122,7 @@ export default function Auth({ mode = 'login' }) {
                     autoComplete="username"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@company.com"
+                    placeholder="Enter your work email"
                   />
                 </Field>
               )}
